@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { geminiUpgrade, LOW_CONF_THRESHOLD } from "@/hooks/useCommandPredictor";
 import { POPULAR_INDIAN_STOCKS } from "@/hooks/useStockData";
 import type { BrokerId } from "@/lib/stocks";
 
@@ -396,13 +397,16 @@ const normalizeText = (text: string): string => {
     [/\bumero\b/g, "add"], [/\bumerto\b/g, "add"],
     [/\bkaro\b/g, ""], [/\bkarna\b/g, ""], [/\bkarni\b/g, ""],
     [/\bwala\b/g, ""], [/\bwali\b/g, ""],
-    [/\bki\b/g, ""], [/\bka\b/g, ""], [/\bke\b/g, ""],
-    [/\bse\b/g, "from"], [/\bpar\b/g, "at"],
+    // Hindi postpositions — only strip when standalone (NOT part of a word)
+    [/(?<=\s)ki(?=\s)/g, ""], [/(?<=\s)ka(?=\s)/g, ""], [/(?<=\s)ke(?=\s)/g, ""],
+    [/(?<=\s)se(?=\s)/g, "from"], [/(?<=\s)par(?=\s)/g, "at"],
     [/\bmere\b/g, "my"], [/\bmera\b/g, "my"],
-    // Gujarati transliterated filler
-    [/\bno\b/g, ""], [/\bni\b/g, ""], [/\bnu\b/g, ""],
-    [/\bma\b/g, "in"], [/\bne\b/g, ""],
-    [/\bdekhado\b/g, "show"],
+    // Gujarati transliterated postpositions — use lookaheads so they don't clobber stock names
+    [/(?<=\s)no(?=\s)/g, ""], [/(?<=\s)ni(?=\s)/g, ""], [/(?<=\s)nu(?=\s)/g, ""],
+    [/(?<=\s)na(?=\s)/g, ""],
+    [/(?<=\s)ma(?=\s)/g, "in"], [/(?<=\s)ne(?=\s)/g, ""],
+    [/\bdekhado\b/g, "show"], [/\bbatao\b/g, "show"], [/\bdikhao\b/g, "show"],
+    [/\bumero\b/g, "add"], [/\bumerto\b/g, "add"], [/\bumaro\b/g, "add"],
     // Generic English
     [/\bshow\b/g, "show"], [/\bopen\b/g, "open"],
     [/\bcheck\b/g, "search"], [/\bfind\b/g, "search"],
@@ -438,7 +442,7 @@ const levenshtein = (a: string, b: string): number => {
 const ALL = POPULAR_INDIAN_STOCKS;
 
 const FILLER_RE =
-  /\b(share|shares|stock|stocks|scrip|script|equity|the|a|an|of|in|on|at|for|from|please|kindly|me|my|some|limited|ltd|company|co|nse|bse|zerodha|upstox|angelone|angel|broker|account|market|price|quantity|rupees|worth|order|buy|sell|invest|all|show|open|chart|news|get|check|tell|search|quote|ltp|find|confirm|cancel|help|funds|watchlist|portfolio|history|gainers|losers|top|admin|logout)\b/g;
+  /\b(share|shares|stock|stocks|scrip|script|equity|equities|unit|units|lot|lots|the|a|an|of|in|on|at|for|from|please|kindly|me|my|some|limited|ltd|company|co|nse|bse|zerodha|upstox|angelone|angel|broker|account|market|price|quantity|rupees|rupe|rupee|inr|worth|order|buy|sell|invest|all|show|open|chart|graph|candle|candlestick|news|headline|get|check|tell|search|quote|ltp|find|confirm|cancel|help|funds|watchlist|portfolio|history|history|gainers|losers|top|admin|logout|dikhao|dekho|batao|dekhado|kholo|lagao|karo|karna|karni|wala|wali|add|remove|latest|about|display|give|financial|result|indicator|technical|technicals|fundamental|fundamentals)\b/gi;
 
 const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 
@@ -678,7 +682,8 @@ const parseCommandInternal = (text: string): VoiceCommandResult => {
   // ── Analysis surfaces ──────────────────────────────────────────────────────
   if (action === "chart" || action === "news" || action === "technicals" || action === "fundamentals") {
     const rest = normalized
-      .replace(/\b(chart|graph|candle|news|headline|technical|technicals|fundamental|fundamentals|financial|result|indicator|open|show|display|give|get|of|for|the|me|please|latest|about|on|check)\b/g, " ")
+      .replace(/\b(chart|graph|candle|candlestick|news|headline|technical|technicals|fundamental|fundamentals|financial|result|indicator|open|show|display|give|get|of|for|the|me|please|latest|about|on|check|dikhao|dekho|batao|dekhado|karo|ka|ke|ki|no|na|nu|ni|ne|ma)\b/gi, " ")
+      .replace(/\s+/g, " ")
       .trim();
     const symbol = rest ? bestSymbolMatch(rest) : undefined;
     return { command: text, action, symbol, suggestion: `${action} ${symbol ?? ""}`.trim() };
@@ -885,6 +890,29 @@ export const useVoiceCommands = () => {
           const combined = alternatives.slice(0, 3).join(" ");
           const parsed = parseCommandInternal(combined);
           if (parsed.action !== "unknown") bestResult = parsed;
+        }
+
+        // ── Gemini fallback: fire when unknown OR low confidence ──────────────
+        // Rule-based result is emitted immediately; Gemini silently upgrades it.
+        const needsGemini =
+          bestResult.action === "unknown" ||
+          (bestConf < LOW_CONF_THRESHOLD &&
+            bestResult.action !== "confirm" &&
+            bestResult.action !== "cancel" &&
+            bestResult.action !== "help" &&
+            bestResult.action !== "logout");
+
+        if (needsGemini) {
+          const transcriptForGemini = alternatives[0] ?? text;
+          void geminiUpgrade(transcriptForGemini, bestResult).then((upgraded) => {
+            if (
+              upgraded &&
+              upgraded.action !== "unknown" &&
+              (upgraded.action !== bestResult.action || upgraded.symbol !== bestResult.symbol)
+            ) {
+              onResult(upgraded);
+            }
+          });
         }
 
         onResult(bestResult);
