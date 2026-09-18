@@ -152,13 +152,13 @@ function shallowEqual(a, b) {
 }
 //#endregion
 //#region node_modules/recharts/es6/util/types.js
-function _typeof$43(o) {
+function _typeof$44(o) {
 	"@babel/helpers - typeof";
-	return _typeof$43 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$44 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$43(o);
+	}, _typeof$44(o);
 }
 /**
 * Determines how values are stacked:
@@ -702,7 +702,7 @@ var getEventHandlerOfChild = function getEventHandlerOfChild(originalHandler, da
 	};
 };
 var adaptEventsOfChild = function adaptEventsOfChild(props, data, index) {
-	if (!(0, import_isObject.default)(props) || _typeof$43(props) !== "object") return null;
+	if (!(0, import_isObject.default)(props) || _typeof$44(props) !== "object") return null;
 	var out = null;
 	Object.keys(props).forEach(function(key) {
 		var item = props[key];
@@ -715,11 +715,11 @@ var adaptEventsOfChild = function adaptEventsOfChild(props, data, index) {
 };
 //#endregion
 //#region node_modules/recharts/es6/util/ReactUtils.js
-var _excluded$18 = ["children"];
+var _excluded$19 = ["children"];
 var _excluded2$7 = ["children"];
-function _objectWithoutProperties$18(source, excluded) {
+function _objectWithoutProperties$19(source, excluded) {
 	if (source == null) return {};
-	var target = _objectWithoutPropertiesLoose$18(source, excluded);
+	var target = _objectWithoutPropertiesLoose$19(source, excluded);
 	var key, i;
 	if (Object.getOwnPropertySymbols) {
 		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
@@ -732,7 +732,7 @@ function _objectWithoutProperties$18(source, excluded) {
 	}
 	return target;
 }
-function _objectWithoutPropertiesLoose$18(source, excluded) {
+function _objectWithoutPropertiesLoose$19(source, excluded) {
 	if (source == null) return {};
 	var target = {};
 	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -741,13 +741,13 @@ function _objectWithoutPropertiesLoose$18(source, excluded) {
 	}
 	return target;
 }
-function _typeof$42(o) {
+function _typeof$43(o) {
 	"@babel/helpers - typeof";
-	return _typeof$42 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$43 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$42(o);
+	}, _typeof$43(o);
 }
 var REACT_BROWSER_EVENT_MAP = {
 	click: "onClick",
@@ -902,7 +902,7 @@ var isSvgElement = function isSvgElement(child) {
 	return child && child.type && (0, import_isString.default)(child.type) && SVG_TAGS.indexOf(child.type) >= 0;
 };
 var hasClipDot = function hasClipDot(dot) {
-	return dot && _typeof$42(dot) === "object" && "clipDot" in dot;
+	return dot && _typeof$43(dot) === "object" && "clipDot" in dot;
 };
 /**
 * Checks if the property is valid to spread onto an SVG element or onto a specific component
@@ -965,8 +965,8 @@ var isChildrenEqual = function isChildrenEqual(nextChildren, prevChildren) {
 var isSingleChildEqual = function isSingleChildEqual(nextChild, prevChild) {
 	if ((0, import_isNil.default)(nextChild) && (0, import_isNil.default)(prevChild)) return true;
 	if (!(0, import_isNil.default)(nextChild) && !(0, import_isNil.default)(prevChild)) {
-		var _ref = nextChild.props || {}, nextChildren = _ref.children, nextProps = _objectWithoutProperties$18(_ref, _excluded$18);
-		var _ref2 = prevChild.props || {}, prevChildren = _ref2.children, prevProps = _objectWithoutProperties$18(_ref2, _excluded2$7);
+		var _ref = nextChild.props || {}, nextChildren = _ref.children, nextProps = _objectWithoutProperties$19(_ref, _excluded$19);
+		var _ref2 = prevChild.props || {}, prevChildren = _ref2.children, prevProps = _objectWithoutProperties$19(_ref2, _excluded2$7);
 		if (nextChildren && prevChildren) return shallowEqual(nextProps, prevProps) && isChildrenEqual(nextChildren, prevChildren);
 		if (!nextChildren && !prevChildren) return shallowEqual(nextProps, prevProps);
 		return false;
@@ -1003,7 +1003,7 @@ var parseChildIndex = function parseChildIndex(child, children) {
 /**
 * @fileOverview Surface
 */
-var _excluded$17 = [
+var _excluded$18 = [
 	"children",
 	"width",
 	"height",
@@ -1022,6 +1022,60 @@ function _extends$29() {
 		return target;
 	};
 	return _extends$29.apply(this, arguments);
+}
+function _objectWithoutProperties$18(source, excluded) {
+	if (source == null) return {};
+	var target = _objectWithoutPropertiesLoose$18(source, excluded);
+	var key, i;
+	if (Object.getOwnPropertySymbols) {
+		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+		for (i = 0; i < sourceSymbolKeys.length; i++) {
+			key = sourceSymbolKeys[i];
+			if (excluded.indexOf(key) >= 0) continue;
+			if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+			target[key] = source[key];
+		}
+	}
+	return target;
+}
+function _objectWithoutPropertiesLoose$18(source, excluded) {
+	if (source == null) return {};
+	var target = {};
+	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
+		if (excluded.indexOf(key) >= 0) continue;
+		target[key] = source[key];
+	}
+	return target;
+}
+function Surface(props) {
+	var children = props.children, width = props.width, height = props.height, viewBox = props.viewBox, className = props.className, style = props.style, title = props.title, desc = props.desc, others = _objectWithoutProperties$18(props, _excluded$18);
+	var svgView = viewBox || {
+		width,
+		height,
+		x: 0,
+		y: 0
+	};
+	var layerClass = clsx("recharts-surface", className);
+	return /*#__PURE__*/ import_react.createElement("svg", _extends$29({}, filterProps(others, true, "svg"), {
+		className: layerClass,
+		width,
+		height,
+		style,
+		viewBox: "".concat(svgView.x, " ").concat(svgView.y, " ").concat(svgView.width, " ").concat(svgView.height)
+	}), /*#__PURE__*/ import_react.createElement("title", null, title), /*#__PURE__*/ import_react.createElement("desc", null, desc), children);
+}
+//#endregion
+//#region node_modules/recharts/es6/container/Layer.js
+var _excluded$17 = ["children", "className"];
+function _extends$28() {
+	_extends$28 = Object.assign ? Object.assign.bind() : function(target) {
+		for (var i = 1; i < arguments.length; i++) {
+			var source = arguments[i];
+			for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+		}
+		return target;
+	};
+	return _extends$28.apply(this, arguments);
 }
 function _objectWithoutProperties$17(source, excluded) {
 	if (source == null) return {};
@@ -1047,62 +1101,8 @@ function _objectWithoutPropertiesLoose$17(source, excluded) {
 	}
 	return target;
 }
-function Surface(props) {
-	var children = props.children, width = props.width, height = props.height, viewBox = props.viewBox, className = props.className, style = props.style, title = props.title, desc = props.desc, others = _objectWithoutProperties$17(props, _excluded$17);
-	var svgView = viewBox || {
-		width,
-		height,
-		x: 0,
-		y: 0
-	};
-	var layerClass = clsx("recharts-surface", className);
-	return /*#__PURE__*/ import_react.createElement("svg", _extends$29({}, filterProps(others, true, "svg"), {
-		className: layerClass,
-		width,
-		height,
-		style,
-		viewBox: "".concat(svgView.x, " ").concat(svgView.y, " ").concat(svgView.width, " ").concat(svgView.height)
-	}), /*#__PURE__*/ import_react.createElement("title", null, title), /*#__PURE__*/ import_react.createElement("desc", null, desc), children);
-}
-//#endregion
-//#region node_modules/recharts/es6/container/Layer.js
-var _excluded$16 = ["children", "className"];
-function _extends$28() {
-	_extends$28 = Object.assign ? Object.assign.bind() : function(target) {
-		for (var i = 1; i < arguments.length; i++) {
-			var source = arguments[i];
-			for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-		}
-		return target;
-	};
-	return _extends$28.apply(this, arguments);
-}
-function _objectWithoutProperties$16(source, excluded) {
-	if (source == null) return {};
-	var target = _objectWithoutPropertiesLoose$16(source, excluded);
-	var key, i;
-	if (Object.getOwnPropertySymbols) {
-		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-		for (i = 0; i < sourceSymbolKeys.length; i++) {
-			key = sourceSymbolKeys[i];
-			if (excluded.indexOf(key) >= 0) continue;
-			if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-			target[key] = source[key];
-		}
-	}
-	return target;
-}
-function _objectWithoutPropertiesLoose$16(source, excluded) {
-	if (source == null) return {};
-	var target = {};
-	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
-		if (excluded.indexOf(key) >= 0) continue;
-		target[key] = source[key];
-	}
-	return target;
-}
 var Layer = /*#__PURE__*/ import_react.forwardRef(function(props, ref) {
-	var children = props.children, className = props.className, others = _objectWithoutProperties$16(props, _excluded$16);
+	var children = props.children, className = props.className, others = _objectWithoutProperties$17(props, _excluded$17);
 	var layerClass = clsx("recharts-layer", className);
 	return /*#__PURE__*/ import_react.createElement("g", _extends$28({ className: layerClass }, filterProps(others, true), { ref }), children);
 });
@@ -1117,15 +1117,15 @@ var warn = function warn(condition, format) {
 * @fileOverview Curve
 */
 var import_upperFirst = /* @__PURE__ */ __toESM(require_upperFirst());
-function _typeof$41(o) {
+function _typeof$42(o) {
 	"@babel/helpers - typeof";
-	return _typeof$41 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$42 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$41(o);
+	}, _typeof$42(o);
 }
-var _excluded$15 = [
+var _excluded$16 = [
 	"type",
 	"size",
 	"sizeType"
@@ -1174,21 +1174,21 @@ function _defineProperty$40(obj, key, value) {
 }
 function _toPropertyKey$41(t) {
 	var i = _toPrimitive$41(t, "string");
-	return "symbol" == _typeof$41(i) ? i : i + "";
+	return "symbol" == _typeof$42(i) ? i : i + "";
 }
 function _toPrimitive$41(t, r) {
-	if ("object" != _typeof$41(t) || !t) return t;
+	if ("object" != _typeof$42(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$41(i)) return i;
+		if ("object" != _typeof$42(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
 }
-function _objectWithoutProperties$15(source, excluded) {
+function _objectWithoutProperties$16(source, excluded) {
 	if (source == null) return {};
-	var target = _objectWithoutPropertiesLoose$15(source, excluded);
+	var target = _objectWithoutPropertiesLoose$16(source, excluded);
 	var key, i;
 	if (Object.getOwnPropertySymbols) {
 		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
@@ -1201,7 +1201,7 @@ function _objectWithoutProperties$15(source, excluded) {
 	}
 	return target;
 }
-function _objectWithoutPropertiesLoose$15(source, excluded) {
+function _objectWithoutPropertiesLoose$16(source, excluded) {
 	if (source == null) return {};
 	var target = {};
 	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -1242,7 +1242,7 @@ var registerSymbol = function registerSymbol(key, factory) {
 };
 var Symbols = function Symbols(_ref) {
 	var _ref$type = _ref.type, type = _ref$type === void 0 ? "circle" : _ref$type, _ref$size = _ref.size, size = _ref$size === void 0 ? 64 : _ref$size, _ref$sizeType = _ref.sizeType, sizeType = _ref$sizeType === void 0 ? "area" : _ref$sizeType;
-	var props = _objectSpread$34(_objectSpread$34({}, _objectWithoutProperties$15(_ref, _excluded$15)), {}, {
+	var props = _objectSpread$34(_objectSpread$34({}, _objectWithoutProperties$16(_ref, _excluded$16)), {}, {
 		type,
 		size,
 		sizeType
@@ -1270,13 +1270,13 @@ Symbols.registerSymbol = registerSymbol;
 /**
 * @fileOverview Default Legend Content
 */
-function _typeof$40(o) {
+function _typeof$41(o) {
 	"@babel/helpers - typeof";
-	return _typeof$40 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$41 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$40(o);
+	}, _typeof$41(o);
 }
 function _extends$26() {
 	_extends$26 = Object.assign ? Object.assign.bind() : function(target) {
@@ -1331,7 +1331,7 @@ function _callSuper$17(t, o, e) {
 	return o = _getPrototypeOf$17(o), _possibleConstructorReturn$17(t, _isNativeReflectConstruct$17() ? Reflect.construct(o, e || [], _getPrototypeOf$17(t).constructor) : o.apply(t, e));
 }
 function _possibleConstructorReturn$17(self, call) {
-	if (call && (_typeof$40(call) === "object" || typeof call === "function")) return call;
+	if (call && (_typeof$41(call) === "object" || typeof call === "function")) return call;
 	else if (call !== void 0) throw new TypeError("Derived constructors may only return object or undefined");
 	return _assertThisInitialized$17(self);
 }
@@ -1383,14 +1383,14 @@ function _defineProperty$39(obj, key, value) {
 }
 function _toPropertyKey$40(t) {
 	var i = _toPrimitive$40(t, "string");
-	return "symbol" == _typeof$40(i) ? i : i + "";
+	return "symbol" == _typeof$41(i) ? i : i + "";
 }
 function _toPrimitive$40(t, r) {
-	if ("object" != _typeof$40(t) || !t) return t;
+	if ("object" != _typeof$41(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$40(i)) return i;
+		if ("object" != _typeof$41(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -1545,15 +1545,15 @@ function getUniqPayload(payload, option, defaultUniqBy) {
 /**
 * @fileOverview Legend
 */
-function _typeof$39(o) {
+function _typeof$40(o) {
 	"@babel/helpers - typeof";
-	return _typeof$39 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$40 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$39(o);
+	}, _typeof$40(o);
 }
-var _excluded$14 = ["ref"];
+var _excluded$15 = ["ref"];
 function ownKeys$32(e, r) {
 	var t = Object.keys(e);
 	if (Object.getOwnPropertySymbols) {
@@ -1597,7 +1597,7 @@ function _callSuper$16(t, o, e) {
 	return o = _getPrototypeOf$16(o), _possibleConstructorReturn$16(t, _isNativeReflectConstruct$16() ? Reflect.construct(o, e || [], _getPrototypeOf$16(t).constructor) : o.apply(t, e));
 }
 function _possibleConstructorReturn$16(self, call) {
-	if (call && (_typeof$39(call) === "object" || typeof call === "function")) return call;
+	if (call && (_typeof$40(call) === "object" || typeof call === "function")) return call;
 	else if (call !== void 0) throw new TypeError("Derived constructors may only return object or undefined");
 	return _assertThisInitialized$16(self);
 }
@@ -1649,21 +1649,21 @@ function _defineProperty$38(obj, key, value) {
 }
 function _toPropertyKey$39(t) {
 	var i = _toPrimitive$39(t, "string");
-	return "symbol" == _typeof$39(i) ? i : i + "";
+	return "symbol" == _typeof$40(i) ? i : i + "";
 }
 function _toPrimitive$39(t, r) {
-	if ("object" != _typeof$39(t) || !t) return t;
+	if ("object" != _typeof$40(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$39(i)) return i;
+		if ("object" != _typeof$40(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
 }
-function _objectWithoutProperties$14(source, excluded) {
+function _objectWithoutProperties$15(source, excluded) {
 	if (source == null) return {};
-	var target = _objectWithoutPropertiesLoose$14(source, excluded);
+	var target = _objectWithoutPropertiesLoose$15(source, excluded);
 	var key, i;
 	if (Object.getOwnPropertySymbols) {
 		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
@@ -1676,7 +1676,7 @@ function _objectWithoutProperties$14(source, excluded) {
 	}
 	return target;
 }
-function _objectWithoutPropertiesLoose$14(source, excluded) {
+function _objectWithoutPropertiesLoose$15(source, excluded) {
 	if (source == null) return {};
 	var target = {};
 	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -1692,7 +1692,7 @@ function renderContent$1(content, props) {
 	if (/*#__PURE__*/ import_react.isValidElement(content)) return /*#__PURE__*/ import_react.cloneElement(content, props);
 	if (typeof content === "function") return /*#__PURE__*/ import_react.createElement(content, props);
 	props.ref;
-	var otherProps = _objectWithoutProperties$14(props, _excluded$14);
+	var otherProps = _objectWithoutProperties$15(props, _excluded$15);
 	return /*#__PURE__*/ import_react.createElement(DefaultLegendContent, otherProps);
 }
 var EPS$1 = 1;
@@ -1821,13 +1821,13 @@ var import_memoize = /* @__PURE__ */ __toESM(require_memoize());
 * @fileOverview Default Tooltip Content
 */
 var import_sortBy = /* @__PURE__ */ __toESM(require_sortBy());
-function _typeof$38(o) {
+function _typeof$39(o) {
 	"@babel/helpers - typeof";
-	return _typeof$38 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$39 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$38(o);
+	}, _typeof$39(o);
 }
 function _extends$25() {
 	_extends$25 = Object.assign ? Object.assign.bind() : function(target) {
@@ -1916,14 +1916,14 @@ function _defineProperty$37(obj, key, value) {
 }
 function _toPropertyKey$38(t) {
 	var i = _toPrimitive$38(t, "string");
-	return "symbol" == _typeof$38(i) ? i : i + "";
+	return "symbol" == _typeof$39(i) ? i : i + "";
 }
 function _toPrimitive$38(t, r) {
-	if ("object" != _typeof$38(t) || !t) return t;
+	if ("object" != _typeof$39(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$38(i)) return i;
+		if ("object" != _typeof$39(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -1999,13 +1999,13 @@ var DefaultTooltipContent = function DefaultTooltipContent(props) {
 };
 //#endregion
 //#region node_modules/recharts/es6/util/tooltip/translate.js
-function _typeof$37(o) {
+function _typeof$38(o) {
 	"@babel/helpers - typeof";
-	return _typeof$37 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$38 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$37(o);
+	}, _typeof$38(o);
 }
 function _defineProperty$36(obj, key, value) {
 	key = _toPropertyKey$37(key);
@@ -2020,14 +2020,14 @@ function _defineProperty$36(obj, key, value) {
 }
 function _toPropertyKey$37(t) {
 	var i = _toPrimitive$37(t, "string");
-	return "symbol" == _typeof$37(i) ? i : i + "";
+	return "symbol" == _typeof$38(i) ? i : i + "";
 }
 function _toPrimitive$37(t, r) {
-	if ("object" != _typeof$37(t) || !t) return t;
+	if ("object" != _typeof$38(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$37(i)) return i;
+		if ("object" != _typeof$38(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -2098,13 +2098,13 @@ function getTooltipTranslate(_ref4) {
 }
 //#endregion
 //#region node_modules/recharts/es6/component/TooltipBoundingBox.js
-function _typeof$36(o) {
+function _typeof$37(o) {
 	"@babel/helpers - typeof";
-	return _typeof$36 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$37 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$36(o);
+	}, _typeof$37(o);
 }
 function ownKeys$30(e, r) {
 	var t = Object.keys(e);
@@ -2149,7 +2149,7 @@ function _callSuper$15(t, o, e) {
 	return o = _getPrototypeOf$15(o), _possibleConstructorReturn$15(t, _isNativeReflectConstruct$15() ? Reflect.construct(o, e || [], _getPrototypeOf$15(t).constructor) : o.apply(t, e));
 }
 function _possibleConstructorReturn$15(self, call) {
-	if (call && (_typeof$36(call) === "object" || typeof call === "function")) return call;
+	if (call && (_typeof$37(call) === "object" || typeof call === "function")) return call;
 	else if (call !== void 0) throw new TypeError("Derived constructors may only return object or undefined");
 	return _assertThisInitialized$15(self);
 }
@@ -2201,14 +2201,14 @@ function _defineProperty$35(obj, key, value) {
 }
 function _toPropertyKey$36(t) {
 	var i = _toPrimitive$36(t, "string");
-	return "symbol" == _typeof$36(i) ? i : i + "";
+	return "symbol" == _typeof$37(i) ? i : i + "";
 }
 function _toPrimitive$36(t, r) {
-	if ("object" != _typeof$36(t) || !t) return t;
+	if ("object" != _typeof$37(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$36(i)) return i;
+		if ("object" != _typeof$37(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -2340,13 +2340,13 @@ var Global = {
 /**
 * @fileOverview Tooltip
 */
-function _typeof$35(o) {
+function _typeof$36(o) {
 	"@babel/helpers - typeof";
-	return _typeof$35 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$36 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$35(o);
+	}, _typeof$36(o);
 }
 function ownKeys$29(e, r) {
 	var t = Object.keys(e);
@@ -2391,7 +2391,7 @@ function _callSuper$14(t, o, e) {
 	return o = _getPrototypeOf$14(o), _possibleConstructorReturn$14(t, _isNativeReflectConstruct$14() ? Reflect.construct(o, e || [], _getPrototypeOf$14(t).constructor) : o.apply(t, e));
 }
 function _possibleConstructorReturn$14(self, call) {
-	if (call && (_typeof$35(call) === "object" || typeof call === "function")) return call;
+	if (call && (_typeof$36(call) === "object" || typeof call === "function")) return call;
 	else if (call !== void 0) throw new TypeError("Derived constructors may only return object or undefined");
 	return _assertThisInitialized$14(self);
 }
@@ -2443,14 +2443,14 @@ function _defineProperty$34(obj, key, value) {
 }
 function _toPropertyKey$35(t) {
 	var i = _toPrimitive$35(t, "string");
-	return "symbol" == _typeof$35(i) ? i : i + "";
+	return "symbol" == _typeof$36(i) ? i : i + "";
 }
 function _toPrimitive$35(t, r) {
-	if ("object" != _typeof$35(t) || !t) return t;
+	if ("object" != _typeof$36(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$35(i)) return i;
+		if ("object" != _typeof$36(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -2539,13 +2539,13 @@ _defineProperty$34(Tooltip, "defaultProps", {
 * @fileOverview Wrapper component to make charts adapt to the size of parent * DOM
 */
 var import_throttle = /* @__PURE__ */ __toESM(require_throttle());
-function _typeof$34(o) {
+function _typeof$35(o) {
 	"@babel/helpers - typeof";
-	return _typeof$34 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$35 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$34(o);
+	}, _typeof$35(o);
 }
 function ownKeys$28(e, r) {
 	var t = Object.keys(e);
@@ -2581,14 +2581,14 @@ function _defineProperty$33(obj, key, value) {
 }
 function _toPropertyKey$34(t) {
 	var i = _toPrimitive$34(t, "string");
-	return "symbol" == _typeof$34(i) ? i : i + "";
+	return "symbol" == _typeof$35(i) ? i : i + "";
 }
 function _toPrimitive$34(t, r) {
-	if ("object" != _typeof$34(t) || !t) return t;
+	if ("object" != _typeof$35(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$34(i)) return i;
+		if ("object" != _typeof$35(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -2747,13 +2747,13 @@ var Cell = function Cell(_props) {
 Cell.displayName = "Cell";
 //#endregion
 //#region node_modules/recharts/es6/util/DOMUtils.js
-function _typeof$33(o) {
+function _typeof$34(o) {
 	"@babel/helpers - typeof";
-	return _typeof$33 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$34 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$33(o);
+	}, _typeof$34(o);
 }
 function ownKeys$27(e, r) {
 	var t = Object.keys(e);
@@ -2789,14 +2789,14 @@ function _defineProperty$32(obj, key, value) {
 }
 function _toPropertyKey$33(t) {
 	var i = _toPrimitive$33(t, "string");
-	return "symbol" == _typeof$33(i) ? i : i + "";
+	return "symbol" == _typeof$34(i) ? i : i + "";
 }
 function _toPrimitive$33(t, r) {
-	if ("object" != _typeof$33(t) || !t) return t;
+	if ("object" != _typeof$34(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$33(i)) return i;
+		if ("object" != _typeof$34(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -2872,13 +2872,13 @@ var getOffset = function getOffset(rect) {
 };
 //#endregion
 //#region node_modules/recharts/es6/util/ReduceCSSCalc.js
-function _typeof$32(o) {
+function _typeof$33(o) {
 	"@babel/helpers - typeof";
-	return _typeof$32 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$33 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$32(o);
+	}, _typeof$33(o);
 }
 function _slicedToArray$7(arr, i) {
 	return _arrayWithHoles$7(arr) || _iterableToArrayLimit$7(arr, i) || _unsupportedIterableToArray$13(arr, i) || _nonIterableRest$7();
@@ -2943,14 +2943,14 @@ function _createClass$16(Constructor, protoProps, staticProps) {
 }
 function _toPropertyKey$32(t) {
 	var i = _toPrimitive$32(t, "string");
-	return "symbol" == _typeof$32(i) ? i : i + "";
+	return "symbol" == _typeof$33(i) ? i : i + "";
 }
 function _toPrimitive$32(t, r) {
-	if ("object" != _typeof$32(t) || !t) return t;
+	if ("object" != _typeof$33(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$32(i)) return i;
+		if ("object" != _typeof$33(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -3093,7 +3093,7 @@ function reduceCSSCalc(expression) {
 }
 //#endregion
 //#region node_modules/recharts/es6/component/Text.js
-var _excluded$13 = [
+var _excluded$14 = [
 	"x",
 	"y",
 	"lineHeight",
@@ -3120,9 +3120,9 @@ function _extends$24() {
 	};
 	return _extends$24.apply(this, arguments);
 }
-function _objectWithoutProperties$13(source, excluded) {
+function _objectWithoutProperties$14(source, excluded) {
 	if (source == null) return {};
-	var target = _objectWithoutPropertiesLoose$13(source, excluded);
+	var target = _objectWithoutPropertiesLoose$14(source, excluded);
 	var key, i;
 	if (Object.getOwnPropertySymbols) {
 		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
@@ -3135,7 +3135,7 @@ function _objectWithoutProperties$13(source, excluded) {
 	}
 	return target;
 }
-function _objectWithoutPropertiesLoose$13(source, excluded) {
+function _objectWithoutPropertiesLoose$14(source, excluded) {
 	if (source == null) return {};
 	var target = {};
 	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -3291,7 +3291,7 @@ var getWordsByLines = function getWordsByLines(_ref4) {
 };
 var DEFAULT_FILL = "#808080";
 var Text = function Text(_ref5) {
-	var _ref5$x = _ref5.x, propsX = _ref5$x === void 0 ? 0 : _ref5$x, _ref5$y = _ref5.y, propsY = _ref5$y === void 0 ? 0 : _ref5$y, _ref5$lineHeight = _ref5.lineHeight, lineHeight = _ref5$lineHeight === void 0 ? "1em" : _ref5$lineHeight, _ref5$capHeight = _ref5.capHeight, capHeight = _ref5$capHeight === void 0 ? "0.71em" : _ref5$capHeight, _ref5$scaleToFit = _ref5.scaleToFit, scaleToFit = _ref5$scaleToFit === void 0 ? false : _ref5$scaleToFit, _ref5$textAnchor = _ref5.textAnchor, textAnchor = _ref5$textAnchor === void 0 ? "start" : _ref5$textAnchor, _ref5$verticalAnchor = _ref5.verticalAnchor, verticalAnchor = _ref5$verticalAnchor === void 0 ? "end" : _ref5$verticalAnchor, _ref5$fill = _ref5.fill, fill = _ref5$fill === void 0 ? DEFAULT_FILL : _ref5$fill, props = _objectWithoutProperties$13(_ref5, _excluded$13);
+	var _ref5$x = _ref5.x, propsX = _ref5$x === void 0 ? 0 : _ref5$x, _ref5$y = _ref5.y, propsY = _ref5$y === void 0 ? 0 : _ref5$y, _ref5$lineHeight = _ref5.lineHeight, lineHeight = _ref5$lineHeight === void 0 ? "1em" : _ref5$lineHeight, _ref5$capHeight = _ref5.capHeight, capHeight = _ref5$capHeight === void 0 ? "0.71em" : _ref5$capHeight, _ref5$scaleToFit = _ref5.scaleToFit, scaleToFit = _ref5$scaleToFit === void 0 ? false : _ref5$scaleToFit, _ref5$textAnchor = _ref5.textAnchor, textAnchor = _ref5$textAnchor === void 0 ? "start" : _ref5$textAnchor, _ref5$verticalAnchor = _ref5.verticalAnchor, verticalAnchor = _ref5$verticalAnchor === void 0 ? "end" : _ref5$verticalAnchor, _ref5$fill = _ref5.fill, fill = _ref5$fill === void 0 ? DEFAULT_FILL : _ref5$fill, props = _objectWithoutProperties$14(_ref5, _excluded$14);
 	var wordsByLines = (0, import_react.useMemo)(function() {
 		return getWordsByLines({
 			breakAll: props.breakAll,
@@ -3309,7 +3309,7 @@ var Text = function Text(_ref5) {
 		props.style,
 		props.width
 	]);
-	var dx = props.dx, dy = props.dy, angle = props.angle, className = props.className, breakAll = props.breakAll, textProps = _objectWithoutProperties$13(props, _excluded2$6);
+	var dx = props.dx, dy = props.dy, angle = props.angle, className = props.className, breakAll = props.breakAll, textProps = _objectWithoutProperties$14(props, _excluded2$6);
 	if (!isNumOrStr(propsX) || !isNumOrStr(propsY)) return null;
 	var x = propsX + (isNumber(dx) ? dx : 0);
 	var y = propsY + (isNumber(dy) ? dy : 0);
@@ -3763,7 +3763,7 @@ function invariant(condition, message) {
 /**
 * @fileOverview Render a group of error bar
 */
-var _excluded$12 = [
+var _excluded$13 = [
 	"offset",
 	"layout",
 	"width",
@@ -3773,13 +3773,13 @@ var _excluded$12 = [
 	"xAxis",
 	"yAxis"
 ];
-function _typeof$31(o) {
+function _typeof$32(o) {
 	"@babel/helpers - typeof";
-	return _typeof$31 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$32 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$31(o);
+	}, _typeof$32(o);
 }
 function _extends$23() {
 	_extends$23 = Object.assign ? Object.assign.bind() : function(target) {
@@ -3834,9 +3834,9 @@ function _iterableToArrayLimit$4(r, l) {
 function _arrayWithHoles$4(arr) {
 	if (Array.isArray(arr)) return arr;
 }
-function _objectWithoutProperties$12(source, excluded) {
+function _objectWithoutProperties$13(source, excluded) {
 	if (source == null) return {};
-	var target = _objectWithoutPropertiesLoose$12(source, excluded);
+	var target = _objectWithoutPropertiesLoose$13(source, excluded);
 	var key, i;
 	if (Object.getOwnPropertySymbols) {
 		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
@@ -3849,7 +3849,7 @@ function _objectWithoutProperties$12(source, excluded) {
 	}
 	return target;
 }
-function _objectWithoutPropertiesLoose$12(source, excluded) {
+function _objectWithoutPropertiesLoose$13(source, excluded) {
 	if (source == null) return {};
 	var target = {};
 	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -3880,7 +3880,7 @@ function _callSuper$13(t, o, e) {
 	return o = _getPrototypeOf$13(o), _possibleConstructorReturn$13(t, _isNativeReflectConstruct$13() ? Reflect.construct(o, e || [], _getPrototypeOf$13(t).constructor) : o.apply(t, e));
 }
 function _possibleConstructorReturn$13(self, call) {
-	if (call && (_typeof$31(call) === "object" || typeof call === "function")) return call;
+	if (call && (_typeof$32(call) === "object" || typeof call === "function")) return call;
 	else if (call !== void 0) throw new TypeError("Derived constructors may only return object or undefined");
 	return _assertThisInitialized$13(self);
 }
@@ -3932,14 +3932,14 @@ function _defineProperty$31(obj, key, value) {
 }
 function _toPropertyKey$31(t) {
 	var i = _toPrimitive$31(t, "string");
-	return "symbol" == _typeof$31(i) ? i : i + "";
+	return "symbol" == _typeof$32(i) ? i : i + "";
 }
 function _toPrimitive$31(t, r) {
-	if ("object" != _typeof$31(t) || !t) return t;
+	if ("object" != _typeof$32(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$31(i)) return i;
+		if ("object" != _typeof$32(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -3954,7 +3954,7 @@ var ErrorBar = /*#__PURE__*/ function(_React$Component) {
 		key: "render",
 		value: function render() {
 			var _this$props = this.props, offset = _this$props.offset, layout = _this$props.layout, width = _this$props.width, dataKey = _this$props.dataKey, data = _this$props.data, dataPointFormatter = _this$props.dataPointFormatter, xAxis = _this$props.xAxis, yAxis = _this$props.yAxis;
-			var svgProps = filterProps(_objectWithoutProperties$12(_this$props, _excluded$12), false);
+			var svgProps = filterProps(_objectWithoutProperties$13(_this$props, _excluded$13), false);
 			this.props.direction === "x" && xAxis.type !== "number" && invariant(false);
 			var errorBars = data.map(function(entry) {
 				var _dataPointFormatter = dataPointFormatter(entry, dataKey), x = _dataPointFormatter.x, y = _dataPointFormatter.y, value = _dataPointFormatter.value, errorVal = _dataPointFormatter.errorVal;
@@ -4040,13 +4040,13 @@ _defineProperty$31(ErrorBar, "defaultProps", {
 _defineProperty$31(ErrorBar, "displayName", "ErrorBar");
 //#endregion
 //#region node_modules/recharts/es6/util/getLegendProps.js
-function _typeof$30(o) {
+function _typeof$31(o) {
 	"@babel/helpers - typeof";
-	return _typeof$30 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$31 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$30(o);
+	}, _typeof$31(o);
 }
 function ownKeys$26(e, r) {
 	var t = Object.keys(e);
@@ -4082,14 +4082,14 @@ function _defineProperty$30(obj, key, value) {
 }
 function _toPropertyKey$30(t) {
 	var i = _toPrimitive$30(t, "string");
-	return "symbol" == _typeof$30(i) ? i : i + "";
+	return "symbol" == _typeof$31(i) ? i : i + "";
 }
 function _toPrimitive$30(t, r) {
-	if ("object" != _typeof$30(t) || !t) return t;
+	if ("object" != _typeof$31(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$30(i)) return i;
+		if ("object" != _typeof$31(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -4135,13 +4135,13 @@ var getLegendProps = function getLegendProps(_ref) {
 };
 //#endregion
 //#region node_modules/recharts/es6/util/ChartUtils.js
-function _typeof$29(o) {
+function _typeof$30(o) {
 	"@babel/helpers - typeof";
-	return _typeof$29 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$30 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$29(o);
+	}, _typeof$30(o);
 }
 function _toConsumableArray$5(arr) {
 	return _arrayWithoutHoles$5(arr) || _iterableToArray$5(arr) || _unsupportedIterableToArray$8(arr) || _nonIterableSpread$5();
@@ -4202,14 +4202,14 @@ function _defineProperty$29(obj, key, value) {
 }
 function _toPropertyKey$29(t) {
 	var i = _toPrimitive$29(t, "string");
-	return "symbol" == _typeof$29(i) ? i : i + "";
+	return "symbol" == _typeof$30(i) ? i : i + "";
 }
 function _toPrimitive$29(t, r) {
-	if ("object" != _typeof$29(t) || !t) return t;
+	if ("object" != _typeof$30(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$29(i)) return i;
+		if ("object" != _typeof$30(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -4948,13 +4948,13 @@ var getTooltipItem = function getTooltipItem(graphicalItem, payload) {
 };
 //#endregion
 //#region node_modules/recharts/es6/util/PolarUtils.js
-function _typeof$28(o) {
+function _typeof$29(o) {
 	"@babel/helpers - typeof";
-	return _typeof$28 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$29 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$28(o);
+	}, _typeof$29(o);
 }
 function ownKeys$24(e, r) {
 	var t = Object.keys(e);
@@ -4990,14 +4990,14 @@ function _defineProperty$28(obj, key, value) {
 }
 function _toPropertyKey$28(t) {
 	var i = _toPrimitive$28(t, "string");
-	return "symbol" == _typeof$28(i) ? i : i + "";
+	return "symbol" == _typeof$29(i) ? i : i + "";
 }
 function _toPrimitive$28(t, r) {
-	if ("object" != _typeof$28(t) || !t) return t;
+	if ("object" != _typeof$29(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$28(i)) return i;
+		if ("object" != _typeof$29(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -5082,15 +5082,15 @@ var inRangeOfSector = function inRangeOfSector(_ref5, sector) {
 };
 //#endregion
 //#region node_modules/recharts/es6/component/Label.js
-function _typeof$27(o) {
+function _typeof$28(o) {
 	"@babel/helpers - typeof";
-	return _typeof$27 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$28 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$27(o);
+	}, _typeof$28(o);
 }
-var _excluded$11 = ["offset"];
+var _excluded$12 = ["offset"];
 function _toConsumableArray$4(arr) {
 	return _arrayWithoutHoles$4(arr) || _iterableToArray$4(arr) || _unsupportedIterableToArray$7(arr) || _nonIterableSpread$4();
 }
@@ -5116,9 +5116,9 @@ function _arrayLikeToArray$7(arr, len) {
 	for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
 	return arr2;
 }
-function _objectWithoutProperties$11(source, excluded) {
+function _objectWithoutProperties$12(source, excluded) {
 	if (source == null) return {};
-	var target = _objectWithoutPropertiesLoose$11(source, excluded);
+	var target = _objectWithoutPropertiesLoose$12(source, excluded);
 	var key, i;
 	if (Object.getOwnPropertySymbols) {
 		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
@@ -5131,7 +5131,7 @@ function _objectWithoutProperties$11(source, excluded) {
 	}
 	return target;
 }
-function _objectWithoutPropertiesLoose$11(source, excluded) {
+function _objectWithoutPropertiesLoose$12(source, excluded) {
 	if (source == null) return {};
 	var target = {};
 	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -5174,14 +5174,14 @@ function _defineProperty$27(obj, key, value) {
 }
 function _toPropertyKey$27(t) {
 	var i = _toPrimitive$27(t, "string");
-	return "symbol" == _typeof$27(i) ? i : i + "";
+	return "symbol" == _typeof$28(i) ? i : i + "";
 }
 function _toPrimitive$27(t, r) {
-	if ("object" != _typeof$27(t) || !t) return t;
+	if ("object" != _typeof$28(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$27(i)) return i;
+		if ("object" != _typeof$28(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
@@ -5396,7 +5396,7 @@ var isPolar = function isPolar(viewBox) {
 	return "cx" in viewBox && isNumber(viewBox.cx);
 };
 function Label(_ref4) {
-	var _ref4$offset = _ref4.offset, offset = _ref4$offset === void 0 ? 5 : _ref4$offset, restProps = _objectWithoutProperties$11(_ref4, _excluded$11);
+	var _ref4$offset = _ref4.offset, offset = _ref4$offset === void 0 ? 5 : _ref4$offset, restProps = _objectWithoutProperties$12(_ref4, _excluded$12);
 	var props = _objectSpread$23({ offset }, restProps);
 	var viewBox = props.viewBox, position = props.position, value = props.value, children = props.children, content = props.content, _props$className = props.className, className = _props$className === void 0 ? "" : _props$className, textBreakAll = props.textBreakAll;
 	if (!viewBox || (0, import_isNil.default)(value) && (0, import_isNil.default)(children) && !/*#__PURE__*/ (0, import_react.isValidElement)(content) && !(0, import_isFunction.default)(content)) return null;
@@ -5497,15 +5497,15 @@ Label.renderCallByParent = renderCallByParent$1;
 //#endregion
 //#region node_modules/recharts/es6/component/LabelList.js
 var import_last = /* @__PURE__ */ __toESM(require_last());
-function _typeof$26(o) {
+function _typeof$27(o) {
 	"@babel/helpers - typeof";
-	return _typeof$26 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+	return _typeof$27 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
 		return typeof o;
 	} : function(o) {
 		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-	}, _typeof$26(o);
+	}, _typeof$27(o);
 }
-var _excluded$10 = ["valueAccessor"];
+var _excluded$11 = ["valueAccessor"];
 var _excluded2$5 = [
 	"data",
 	"dataKey",
@@ -5582,21 +5582,21 @@ function _defineProperty$26(obj, key, value) {
 }
 function _toPropertyKey$26(t) {
 	var i = _toPrimitive$26(t, "string");
-	return "symbol" == _typeof$26(i) ? i : i + "";
+	return "symbol" == _typeof$27(i) ? i : i + "";
 }
 function _toPrimitive$26(t, r) {
-	if ("object" != _typeof$26(t) || !t) return t;
+	if ("object" != _typeof$27(t) || !t) return t;
 	var e = t[Symbol.toPrimitive];
 	if (void 0 !== e) {
 		var i = e.call(t, r || "default");
-		if ("object" != _typeof$26(i)) return i;
+		if ("object" != _typeof$27(i)) return i;
 		throw new TypeError("@@toPrimitive must return a primitive value.");
 	}
 	return ("string" === r ? String : Number)(t);
 }
-function _objectWithoutProperties$10(source, excluded) {
+function _objectWithoutProperties$11(source, excluded) {
 	if (source == null) return {};
-	var target = _objectWithoutPropertiesLoose$10(source, excluded);
+	var target = _objectWithoutPropertiesLoose$11(source, excluded);
 	var key, i;
 	if (Object.getOwnPropertySymbols) {
 		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
@@ -5609,7 +5609,7 @@ function _objectWithoutProperties$10(source, excluded) {
 	}
 	return target;
 }
-function _objectWithoutPropertiesLoose$10(source, excluded) {
+function _objectWithoutPropertiesLoose$11(source, excluded) {
 	if (source == null) return {};
 	var target = {};
 	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -5622,8 +5622,8 @@ var defaultAccessor = function defaultAccessor(entry) {
 	return Array.isArray(entry.value) ? (0, import_last.default)(entry.value) : entry.value;
 };
 function LabelList(_ref) {
-	var _ref$valueAccessor = _ref.valueAccessor, valueAccessor = _ref$valueAccessor === void 0 ? defaultAccessor : _ref$valueAccessor, restProps = _objectWithoutProperties$10(_ref, _excluded$10);
-	var data = restProps.data, dataKey = restProps.dataKey, clockWise = restProps.clockWise, id = restProps.id, textBreakAll = restProps.textBreakAll, others = _objectWithoutProperties$10(restProps, _excluded2$5);
+	var _ref$valueAccessor = _ref.valueAccessor, valueAccessor = _ref$valueAccessor === void 0 ? defaultAccessor : _ref$valueAccessor, restProps = _objectWithoutProperties$11(_ref, _excluded$11);
+	var data = restProps.data, dataKey = restProps.dataKey, clockWise = restProps.clockWise, id = restProps.id, textBreakAll = restProps.textBreakAll, others = _objectWithoutProperties$11(restProps, _excluded2$5);
 	if (!data || !data.length) return null;
 	return /*#__PURE__*/ import_react.createElement(Layer, { className: "recharts-label-list" }, data.map(function(entry, index) {
 		var value = (0, import_isNil.default)(dataKey) ? valueAccessor(entry, index) : getValueByDataKey(entry && entry.payload, dataKey);
@@ -5667,6 +5667,57 @@ function renderCallByParent(parentProps, data) {
 	return [parseLabelList(parentProps.label, data)].concat(_toConsumableArray$3(explicitChildren));
 }
 LabelList.renderCallByParent = renderCallByParent;
+//#endregion
+//#region node_modules/recharts/es6/component/Customized.js
+/**
+* @fileOverview Customized
+*/
+var _excluded$10 = ["component"];
+function _typeof$26(o) {
+	"@babel/helpers - typeof";
+	return _typeof$26 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+		return typeof o;
+	} : function(o) {
+		return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+	}, _typeof$26(o);
+}
+function _objectWithoutProperties$10(source, excluded) {
+	if (source == null) return {};
+	var target = _objectWithoutPropertiesLoose$10(source, excluded);
+	var key, i;
+	if (Object.getOwnPropertySymbols) {
+		var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+		for (i = 0; i < sourceSymbolKeys.length; i++) {
+			key = sourceSymbolKeys[i];
+			if (excluded.indexOf(key) >= 0) continue;
+			if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+			target[key] = source[key];
+		}
+	}
+	return target;
+}
+function _objectWithoutPropertiesLoose$10(source, excluded) {
+	if (source == null) return {};
+	var target = {};
+	for (var key in source) if (Object.prototype.hasOwnProperty.call(source, key)) {
+		if (excluded.indexOf(key) >= 0) continue;
+		target[key] = source[key];
+	}
+	return target;
+}
+/**
+* custom svg elements by rechart instance props and state.
+* @returns {Object}   svg elements
+*/
+function Customized(_ref) {
+	var component = _ref.component, props = _objectWithoutProperties$10(_ref, _excluded$10);
+	var child;
+	if (/*#__PURE__*/ (0, import_react.isValidElement)(component)) child = /*#__PURE__*/ (0, import_react.cloneElement)(component, props);
+	else if ((0, import_isFunction.default)(component)) child = /*#__PURE__*/ (0, import_react.createElement)(component, props);
+	else warn(false, "Customized's props `component` must be React.element or Function, but got %s.", _typeof$26(component));
+	return /*#__PURE__*/ import_react.createElement(Layer, { className: "recharts-customized-wrapper" }, child);
+}
+Customized.displayName = "Customized";
 //#endregion
 //#region node_modules/recharts/es6/shape/Sector.js
 /**
@@ -14166,4 +14217,4 @@ var ComposedChart = generateCategoricalChart({
 	formatAxisMap
 });
 //#endregion
-export { XAxis as a, CartesianGrid as c, ResponsiveContainer as d, Tooltip as f, YAxis as i, Bar as l, AreaChart as n, Area as o, BarChart as r, Line as s, ComposedChart as t, Cell as u };
+export { XAxis as a, CartesianGrid as c, Cell as d, ResponsiveContainer as f, YAxis as i, Bar as l, AreaChart as n, Area as o, Tooltip as p, BarChart as r, Line as s, ComposedChart as t, Customized as u };
