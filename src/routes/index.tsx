@@ -34,7 +34,6 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
-import { useCommandPredictor } from "@/hooks/useCommandPredictor";
 import { useStockData } from "@/hooks/useStockData";
 import { useVoiceCommands, type VoiceCommandResult } from "@/hooks/useVoiceCommands";
 import { estimateCharges, totalChargesFor } from "@/lib/brokerage";
@@ -80,19 +79,17 @@ function Metric({ label, value, tone }: { label: string; value: string; tone?: "
 }
 
 function Terminal() {
-  const { user, loading, isDemoMode, signOut } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { stocks, indices, priceOf } = useStockData();
-  const { isListening, transcript, supported, language, setLanguage, startListening, stopListening, speak, parseCommand } = useVoiceCommands();
-  const { predict: geminiPredict, hasGemini } = useCommandPredictor();
+  const { isListening, transcript, supported, startListening, stopListening, speak } = useVoiceCommands();
 
   const fetchWorkspace = useServerFn(getWorkspace);
   const { data: workspace } = useQuery({
     queryKey: ["workspace"],
     queryFn: () => fetchWorkspace(),
-    // Don't call server functions in demo mode — no Supabase session exists
-    enabled: !!user && !isDemoMode,
+    enabled: !!user,
   });
 
   const [tab, setTab] = useState("market");
@@ -242,21 +239,6 @@ function Terminal() {
 
   const handleCommand = async (r: VoiceCommandResult) => {
     const heard = r.command;
-
-    // If rule-based parser was uncertain, try Gemini fallback
-    if (r.action === "unknown" && heard.length > 2) {
-      pushLog(heard, hasGemini ? "Thinking…" : "Command not recognised.", false);
-      if (hasGemini) {
-        const predicted = await geminiPredict(heard);
-        if (predicted && predicted.action !== "unknown") {
-          await handleCommand(predicted);
-          return;
-        }
-      }
-      speak("Sorry, I didn't understand. Please try again.");
-      return;
-    }
-
     switch (r.action) {
       case "buy":
       case "sell": {
@@ -446,19 +428,8 @@ function Terminal() {
 
   return (
     <div className="min-h-screen pb-24">
-      {isDemoMode && (
-        <div className="sticky top-0 z-50 flex items-center justify-center gap-2 bg-primary/90 px-4 py-1.5 text-xs font-semibold text-primary-foreground">
-          🎮 Demo Mode — data is simulated, no real trades placed
-          <button
-            onClick={() => signOut().then(() => navigate({ to: "/auth" }))}
-            className="ml-2 rounded border border-primary-foreground/30 px-2 py-0.5 text-[11px] hover:bg-primary-foreground/10"
-          >
-            Exit Demo
-          </button>
-        </div>
-      )}
       <TopBar
-        email={isDemoMode ? "Demo Trader" : (workspace?.profile?.email ?? user.email)}
+        email={workspace?.profile?.email ?? user.email}
         isAdmin={workspace?.isAdmin}
         onSignOut={signOut}
         funds={formatINR(totalFunds, 0)}
@@ -487,12 +458,6 @@ function Terminal() {
               transcript={transcript}
               log={log}
               onToggle={() => (isListening ? stopListening() : startListening(handleCommand))}
-              language={language}
-              onLanguageChange={setLanguage}
-              onExampleClick={(text) => {
-                const parsed = parseCommand(text);
-                void handleCommand(parsed);
-              }}
             />
 
             {selectedQuote ? (

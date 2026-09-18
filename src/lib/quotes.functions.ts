@@ -17,16 +17,10 @@ const YAHOO_SUFFIX: Record<string, string> = {
 };
 
 const INDEX_TICKERS: Record<string, string> = {
-  NIFTY50:       "%5ENSEI",
-  SENSEX:        "%5EBSESN",
-  BANKNIFTY:     "%5ENSEBANK",
-  NIFTYIT:       "%5ECNXIT",
-  NIFTYMIDCAP:   "%5ENSMIDCP",
-  NIFTYSMALLCAP: "%5ENSSMCP",
-  NIFTYFMCG:     "%5ECNXFMCG",
-  NIFTYPHARMA:   "%5ECNXPHARMA",
-  NIFTYAUTO:     "%5ECNXAUTO",
-  NIFTYENERGY:   "%5ECNXENERGY",
+  NIFTY50: "%5ENSEI",
+  SENSEX: "%5EBSESN",
+  BANKNIFTY: "%5ENSEBANK",
+  NIFTYIT: "%5ECNXIT",
 };
 
 const drift = (base: number) => {
@@ -39,36 +33,32 @@ const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36";
 
 /**
- * Live quote from the Yahoo chart endpoint.
- * Tries query1 then query2 with automatic retry on failure.
+ * Live quote from the Yahoo chart endpoint. This is the primary source: the
+ * legacy batch quote API now returns 401 for anonymous callers, while the
+ * chart endpoint stays open and exposes regularMarketPrice + previousClose.
  */
-async function fetchYahooChart(
-  ticker: string,
-  retries = 2,
-): Promise<{ price: number; prevClose: number } | null> {
+async function fetchYahooChart(ticker: string): Promise<{ price: number; prevClose: number } | null> {
   for (const host of ["query1", "query2"]) {
-    for (let attempt = 0; attempt <= retries; attempt++) {
-      try {
-        const res = await fetch(
-          `https://${host}.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=5d`,
-          { headers: { "User-Agent": UA, Accept: "application/json" } },
-        );
-        if (!res.ok) break; // move to next host
-        const json = (await res.json()) as {
-          chart?: {
-            result?: Array<{
-              meta?: { regularMarketPrice?: number; chartPreviousClose?: number; previousClose?: number };
-            }>;
-          };
+    try {
+      const res = await fetch(
+        `https://${host}.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=5d`,
+        { headers: { "User-Agent": UA, Accept: "application/json" } },
+      );
+      if (!res.ok) continue;
+      const json = (await res.json()) as {
+        chart?: {
+          result?: Array<{
+            meta?: { regularMarketPrice?: number; chartPreviousClose?: number; previousClose?: number };
+          }>;
         };
-        const meta = json.chart?.result?.[0]?.meta;
-        const price = meta?.regularMarketPrice;
-        if (typeof price !== "number") break;
-        const prevClose = meta?.chartPreviousClose ?? meta?.previousClose ?? price;
-        return { price: +price.toFixed(2), prevClose: +prevClose.toFixed(2) };
-      } catch {
-        if (attempt < retries) await new Promise((r) => setTimeout(r, 150 * (attempt + 1)));
-      }
+      };
+      const meta = json.chart?.result?.[0]?.meta;
+      const price = meta?.regularMarketPrice;
+      if (typeof price !== "number") continue;
+      const prevClose = meta?.chartPreviousClose ?? meta?.previousClose ?? price;
+      return { price: +price.toFixed(2), prevClose: +prevClose.toFixed(2) };
+    } catch {
+      // try next host
     }
   }
   return null;
@@ -109,6 +99,12 @@ const toQuote = (
   live,
 });
 
+/**
+ * Live NSE/BSE quotes for the tracked universe. Yahoo Finance India feed is the
+ * primary source (.NS for NSE, .BO for BSE), with a per-symbol chart call and
+ * Stooq India as fallbacks, and a simulated tape as the last resort so the
+ * terminal always renders.
+ */
 /** Resolve quotes with limited concurrency so the edge runtime stays responsive. */
 async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   const out: R[] = new Array(items.length) as R[];
@@ -124,25 +120,17 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promis
   return out;
 }
 
-/**
- * Live NSE/BSE quotes for the tracked universe.
- * Concurrency raised to 20 to keep latency low with the larger symbol universe.
- * Primary: Yahoo Finance (.NS/.BO); fallback: Stooq; last resort: deterministic drift.
- */
 export const getMarketQuotes = createServerFn({ method: "GET" }).handler(async () => {
-  const stocks = await mapLimit(ALL_STOCKS, 20, async (stock): Promise<Quote> => {
+  const stocks = await mapLimit(ALL_STOCKS, 8, async (stock): Promise<Quote> => {
     const ticker = `${stock.symbol}${YAHOO_SUFFIX[stock.exchange]}`;
     const remote =
       (await fetchYahooChart(ticker)) ??
-      (stock.exchange === "NSE" ? await fetchStooq(stock.symbol) : null) ??
-      // BSE fallback: try .BO variant
-      (stock.exchange === "BSE" ? await fetchYahooChart(`${stock.symbol}.BO`) : null);
+      (stock.exchange === "NSE" ? await fetchStooq(stock.symbol) : null);
     return toQuote(stock.symbol, remote ?? drift(stock.base), !!remote);
   });
 
-  const indices = await mapLimit(INDIAN_INDICES, 6, async (idx): Promise<Quote> => {
-    const rawTicker = INDEX_TICKERS[idx.symbol];
-    const ticker = rawTicker ? decodeURIComponent(rawTicker) : null;
+  const indices = await mapLimit(INDIAN_INDICES, 4, async (idx): Promise<Quote> => {
+    const ticker = decodeURIComponent(INDEX_TICKERS[idx.symbol] ?? "");
     const remote = ticker ? await fetchYahooChart(ticker) : null;
     return toQuote(idx.symbol, remote ?? drift(idx.base), !!remote);
   });

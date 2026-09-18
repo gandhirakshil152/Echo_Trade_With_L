@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 
 import { getMarketQuotes, type Quote } from "@/lib/quotes.functions";
@@ -14,23 +14,9 @@ export interface LiveQuote extends Quote {
   sector: string;
 }
 
-/** Returns true during NSE/BSE trading hours (Mon–Fri 09:15–15:30 IST) */
-export const isMarketOpen = (): boolean => {
-  const now = new Date();
-  // Convert to IST (UTC+5:30)
-  const ist = new Date(now.getTime() + (5.5 - now.getTimezoneOffset() / 60) * 3600_000);
-  const day = ist.getDay(); // 0=Sun, 6=Sat
-  if (day === 0 || day === 6) return false;
-  const hm = ist.getHours() * 100 + ist.getMinutes();
-  return hm >= 915 && hm <= 1530;
-};
-
 const seed = (): Record<string, Quote> => {
   const out: Record<string, Quote> = {};
-  for (const s of [
-    ...ALL_STOCKS,
-    ...INDIAN_INDICES.map((i) => ({ symbol: i.symbol, base: i.base })),
-  ]) {
+  for (const s of [...ALL_STOCKS, ...INDIAN_INDICES.map((i) => ({ symbol: i.symbol, base: i.base }))]) {
     out[s.symbol] = {
       symbol: s.symbol,
       price: s.base,
@@ -44,24 +30,14 @@ const seed = (): Record<string, Quote> => {
 };
 
 export const useStockData = () => {
-  // Dynamic refresh interval: 5s during market hours, 30s otherwise
-  const [refreshMs, setRefreshMs] = useState(() => (isMarketOpen() ? 5_000 : 30_000));
-
-  useEffect(() => {
-    // Re-evaluate every minute so the interval transitions at open/close
-    const id = setInterval(() => setRefreshMs(isMarketOpen() ? 5_000 : 30_000), 60_000);
-    return () => clearInterval(id);
-  }, []);
-
   const { data, isLoading, isFetching, dataUpdatedAt } = useQuery({
     queryKey: ["market-quotes"],
     queryFn: () => getMarketQuotes(),
-    refetchInterval: refreshMs,
+    // Real exchange polling — refresh every 10s, including while the tab is idle.
+    refetchInterval: 10_000,
     refetchIntervalInBackground: true,
     refetchOnWindowFocus: true,
-    staleTime: 4_000,
-    // Keep previous data so UI never shows a loading blank state
-    placeholderData: keepPreviousData,
+    staleTime: 5_000,
   });
 
   const [tape, setTape] = useState<Record<string, Quote>>(seed);
@@ -75,17 +51,14 @@ export const useStockData = () => {
     });
   }, [data]);
 
+  // No simulated ticks: prices only move when a fresh exchange quote arrives.
+
+
+
   const stocks = useMemo<LiveQuote[]>(
     () =>
       ALL_STOCKS.map((s) => ({
-        ...(tape[s.symbol] ?? {
-          symbol: s.symbol,
-          price: s.base,
-          prevClose: s.base,
-          change: 0,
-          changePercent: 0,
-          live: false,
-        }),
+        ...(tape[s.symbol] ?? { symbol: s.symbol, price: s.base, prevClose: s.base, change: 0, changePercent: 0, live: false }),
         name: s.name,
         exchange: s.exchange,
         sector: s.sector,
@@ -96,23 +69,14 @@ export const useStockData = () => {
   const indices = useMemo(
     () =>
       INDIAN_INDICES.map((i) => ({
-        ...(tape[i.symbol] ?? {
-          symbol: i.symbol,
-          price: i.base,
-          prevClose: i.base,
-          change: 0,
-          changePercent: 0,
-          live: false,
-        }),
+        ...(tape[i.symbol] ?? { symbol: i.symbol, price: i.base, prevClose: i.base, change: 0, changePercent: 0, live: false }),
         name: i.name,
       })),
     [tape],
   );
 
   const priceOf = (symbol: string) =>
-    tape[symbol.toUpperCase()]?.price ??
-    ALL_STOCKS.find((s) => s.symbol === symbol.toUpperCase())?.base ??
-    0;
+    tape[symbol.toUpperCase()]?.price ?? ALL_STOCKS.find((s) => s.symbol === symbol.toUpperCase())?.base ?? 0;
 
   return {
     stocks,
@@ -120,12 +84,7 @@ export const useStockData = () => {
     priceOf,
     isLoading,
     isFetching,
-    marketOpen: isMarketOpen(),
-    updatedAt: data?.fetchedAt
-      ? new Date(data.fetchedAt)
-      : dataUpdatedAt
-        ? new Date(dataUpdatedAt)
-        : null,
+    updatedAt: data?.fetchedAt ? new Date(data.fetchedAt) : dataUpdatedAt ? new Date(dataUpdatedAt) : null,
     isLiveFeed: !!data?.stocks.some((s) => s.live),
   };
 };

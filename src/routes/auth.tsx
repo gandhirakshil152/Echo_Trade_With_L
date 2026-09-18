@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { AudioLines, Zap } from "lucide-react";
+import { AudioLines } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
+import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/auth")({
@@ -30,7 +31,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const { user, loading, supabaseError, enterDemoMode } = useAuth();
+  const { user, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -42,53 +43,41 @@ function AuthPage() {
 
   const signIn = async () => {
     setBusy(true);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        if (error.message.toLowerCase().includes("network") || error.message.toLowerCase().includes("fetch")) {
-          toast.error("Cannot reach Supabase. Use demo mode to explore the app.");
-        } else {
-          toast.error(error.message);
-        }
-        return;
-      }
-      toast.success("Welcome back to EchoTrade");
-      navigate({ to: "/" });
-    } catch {
-      toast.error("Connection failed. Try demo mode.");
-    } finally {
-      setBusy(false);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setBusy(false);
+    if (error) {
+      toast.error(error.message);
+      return;
     }
+    toast.success("Welcome back to EchoTrade");
+    navigate({ to: "/" });
   };
 
   const signUp = async () => {
     setBusy(true);
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin },
-      });
-      if (error) {
-        if (error.message.toLowerCase().includes("network") || error.message.toLowerCase().includes("fetch")) {
-          toast.error("Cannot reach Supabase. Use demo mode to explore the app.");
-        } else {
-          toast.error(error.message);
-        }
-        return;
-      }
-      toast.success("Account created — check your email to confirm");
-      navigate({ to: "/" });
-    } catch {
-      toast.error("Connection failed. Try demo mode.");
-    } finally {
-      setBusy(false);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin },
+    });
+    setBusy(false);
+    if (error) {
+      toast.error(error.message);
+      return;
     }
+    toast.success("Account created — three broker accounts linked");
+    navigate({ to: "/" });
   };
 
-  const handleDemoMode = () => {
-    enterDemoMode();
-    toast.success("Demo mode active — explore EchoTrade freely!");
+  const google = async () => {
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
+    if (result.error) {
+      toast.error("Google sign-in failed");
+      return;
+    }
+    if (result.redirected) return;
     navigate({ to: "/" });
   };
 
@@ -108,33 +97,7 @@ function AuthPage() {
           One login, three linked broker accounts, all funds in rupees.
         </p>
 
-        {supabaseError && (
-          <div className="mt-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-2 text-xs text-yellow-600 dark:text-yellow-400">
-            ⚠️ Cannot connect to Supabase backend. You can still use{" "}
-            <strong>Demo Mode</strong> to explore the app locally.
-          </div>
-        )}
-
-        {/* ── Demo Mode CTA (always visible) ── */}
-        <div className="mt-5 rounded-xl border border-primary/30 bg-primary/5 p-4">
-          <div className="flex items-center gap-2">
-            <Zap className="size-4 text-primary" />
-            <span className="text-sm font-semibold">Demo Mode — no account needed</span>
-          </div>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Explore live prices, voice commands in English, Hindi & Gujarati, charts and all features.
-            No data is saved.
-          </p>
-          <Button className="mt-3 w-full" onClick={handleDemoMode}>
-            <Zap className="mr-1.5 size-4" /> Continue as Guest (Demo)
-          </Button>
-        </div>
-
-        <div className="my-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          <span className="h-px flex-1 bg-border" /> or sign in <span className="h-px flex-1 bg-border" />
-        </div>
-
-        <Tabs defaultValue="signin">
+        <Tabs defaultValue="signin" className="mt-6">
           <TabsList className="w-full">
             <TabsTrigger value="signin" className="flex-1">
               Sign in
@@ -147,13 +110,7 @@ function AuthPage() {
           <TabsContent value="signin" className="space-y-3 pt-4">
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && signIn()}
-              />
+              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
@@ -162,11 +119,10 @@ function AuthPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && signIn()}
               />
             </div>
-            <Button className="w-full" onClick={signIn} disabled={busy || !email || !password}>
-              {busy ? "Signing in…" : "Sign in"}
+            <Button className="w-full" onClick={signIn} disabled={busy}>
+              Sign in
             </Button>
           </TabsContent>
 
@@ -188,11 +144,18 @@ function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <Button className="w-full" onClick={signUp} disabled={busy || !email || !password}>
-              {busy ? "Creating…" : "Create account"}
+            <Button className="w-full" onClick={signUp} disabled={busy}>
+              Create account
             </Button>
           </TabsContent>
         </Tabs>
+
+        <div className="my-4 flex items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+          <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+        </div>
+        <Button variant="outline" className="w-full" onClick={google}>
+          Continue with Google
+        </Button>
       </div>
     </main>
   );

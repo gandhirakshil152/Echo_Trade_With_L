@@ -1,4 +1,4 @@
-import { useNavigate, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   AudioLines,
   BadgeIndianRupee,
@@ -10,13 +10,11 @@ import {
   ShieldCheck,
   Sparkles,
   Wallet,
-  Zap,
 } from "lucide-react";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TickerStrip } from "@/components/TickerStrip";
 import { Button } from "@/components/ui/button";
-import { enableDemoMode } from "@/hooks/useAuth";
 import { formatINR } from "@/lib/stocks";
 import { cn } from "@/lib/utils";
 
@@ -43,13 +41,6 @@ const FEATURES = [
 ];
 
 export function Splash({ indices }: { indices: IndexItem[] }) {
-  const navigate = useNavigate();
-
-  const handleDemo = () => {
-    enableDemoMode();
-    navigate({ to: "/" });
-  };
-
   return (
     <main>
       <TickerStrip items={indices} />
@@ -58,9 +49,11 @@ export function Splash({ indices }: { indices: IndexItem[] }) {
         <ThemeToggle />
       </div>
 
+
+
       <section className="relative mx-auto max-w-6xl px-4 pb-12 pt-12 text-center sm:pb-16 sm:pt-20">
         <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface/60 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          <AudioLines className="size-3.5 text-primary" /> voice command trading · nse &amp; bse
+          <AudioLines className="size-3.5 text-primary" /> voice command trading · nse & bse
         </span>
         <h1 className="font-display mt-6 text-4xl font-bold leading-[1.08] sm:text-6xl lg:text-7xl">
           Say it. <span className="text-gradient">Trade it.</span>
@@ -69,15 +62,12 @@ export function Splash({ indices }: { indices: IndexItem[] }) {
           EchoTrade is a voice-first Indian trading terminal. Live market data, charts, fundamentals and news
           in one screen — with Zerodha, Upstox and Angel One panels you control by speaking.
         </p>
-        <p className="mt-2 text-sm font-medium text-primary">
-          🇮🇳 Now with Hindi (हिंदी) &amp; Gujarati (ગુજરાતી) voice commands
-        </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
-          <Button size="lg" onClick={handleDemo} className="gap-2">
-            <Zap className="size-4" /> Try Demo — No Login Needed
+          <Button asChild size="lg">
+            <Link to="/auth">Open your terminal</Link>
           </Button>
           <Button asChild size="lg" variant="outline">
-            <Link to="/auth">Sign in / Create Account</Link>
+            <Link to="/auth">Create free account</Link>
           </Button>
         </div>
 
