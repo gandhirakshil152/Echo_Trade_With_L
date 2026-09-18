@@ -82,6 +82,7 @@ export function VoiceConsole({
   onToggle,
   language,
   onLanguageChange,
+  onExampleClick,
 }: {
   supported: boolean;
   isListening: boolean;
@@ -90,6 +91,7 @@ export function VoiceConsole({
   onToggle: () => void;
   language: VoiceLanguage;
   onLanguageChange: (lang: VoiceLanguage) => void;
+  onExampleClick?: (text: string) => void;
 }) {
   const examples = EXAMPLES[language];
   const tip = LANG_TIPS[language];
@@ -167,12 +169,14 @@ export function VoiceConsole({
       {/* ── Example chips ── */}
       <div className="mt-3 flex flex-wrap gap-1.5">
         {examples.map((e) => (
-          <span
+          <button
             key={e}
-            className="rounded-full border border-border/70 bg-surface-2/60 px-2.5 py-1 text-[11px] text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors cursor-default"
+            type="button"
+            onClick={() => onExampleClick?.(e)}
+            className="rounded-full border border-border/70 bg-surface-2/60 px-2.5 py-1 text-[11px] text-muted-foreground hover:border-primary/60 hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer text-left"
           >
             {e}
-          </span>
+          </button>
         ))}
       </div>
 

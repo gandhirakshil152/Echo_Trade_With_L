@@ -1,11 +1,11 @@
 {
-  "compatibility_date": "2026-09-17",
+  "compatibility_date": "2026-09-18",
   "main": "index.mjs",
   "assets": {
     "binding": "ASSETS",
     "directory": "..\\public"
   },
-  "name": "tanstack-start-ts-downloads-echo-trade-voice-main-echo-trade-voice-main",
+  "name": "gandhirakshil152-frolic",
   "compatibility_flags": [
     "nodejs_compat"
   ],

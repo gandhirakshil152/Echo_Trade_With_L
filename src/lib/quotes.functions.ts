@@ -126,11 +126,11 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promis
 
 /**
  * Live NSE/BSE quotes for the tracked universe.
- * Concurrency raised to 14 to keep latency low with the larger symbol universe.
+ * Concurrency raised to 20 to keep latency low with the larger symbol universe.
  * Primary: Yahoo Finance (.NS/.BO); fallback: Stooq; last resort: deterministic drift.
  */
 export const getMarketQuotes = createServerFn({ method: "GET" }).handler(async () => {
-  const stocks = await mapLimit(ALL_STOCKS, 14, async (stock): Promise<Quote> => {
+  const stocks = await mapLimit(ALL_STOCKS, 20, async (stock): Promise<Quote> => {
     const ticker = `${stock.symbol}${YAHOO_SUFFIX[stock.exchange]}`;
     const remote =
       (await fetchYahooChart(ticker)) ??

@@ -43,9 +43,7 @@ export interface VoiceCommandResult {
   exchange?: "NSE" | "BSE" | undefined;
   broker?: BrokerId | undefined;
   pin?: string | undefined;
-  /** Which view a broker filter applies to. */
   target?: "portfolio" | "orders" | "watchlist" | "funds" | "brokers" | undefined;
-  /** true when the user asked to clear the broker filter ("all brokers"). */
   clearFilter?: boolean | undefined;
   suggestion?: string | undefined;
   confidence?: number | undefined;
@@ -53,28 +51,82 @@ export interface VoiceCommandResult {
 
 // ─── Number Words ─────────────────────────────────────────────────────────────
 
-/** English + Hindi (transliterated) + Gujarati (transliterated) → value */
+/**
+ * English + Hindi (transliterated) + Gujarati (transliterated) → value
+ * Covers ALL numbers needed to form 4-8 digit amounts.
+ */
 const NUMBER_WORDS: Record<string, number> = {
-  // English
-  zero: 0, oh: 0, one: 1, won: 1, two: 2, to: 2, too: 2, three: 3, tree: 3,
-  four: 4, for: 4, fore: 4, five: 5, six: 6, sex: 6, seven: 7, eight: 8, ate: 8,
-  nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
-  fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
-  twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70,
-  eighty: 80, ninety: 90, hundred: 100, thousand: 1000, lakh: 100000,
-  lac: 100000, lakhs: 100000, lacs: 100000, crore: 10000000, crores: 10000000,
-  // Hindi transliterated
-  ek: 1, do: 2, teen: 3, char: 4, paanch: 5, panch: 5, chhe: 6, chh: 6, saat: 7,
-  aath: 8, nau: 9, das: 10, gyarah: 11, barah: 12, terah: 13, chaudah: 14,
-  pandrah: 15, solah: 16, satrah: 17, atharah: 18, unnis: 19, bees: 20,
-  tees: 30, chalis: 40, pachas: 50, saath: 60, sattar: 70, assi: 80, nabbe: 90,
-  sau: 100, hazaar: 1000, hajar: 1000, karor: 10000000, karod: 10000000,
-  // Gujarati transliterated
-  eka: 1, be: 2, tran: 3, pancha: 5, saat2: 7, nav: 9,
-  agiyar: 11, bar: 12, ter: 13, chaud: 14, pandhar: 15,
-  sol: 16, sattar2: 17, athar: 18, ognis: 19, vis: 20, tris: 30,
-  panchash: 50, sath: 60, ashi: 80, navvu: 90, so: 100,
-  hazar: 1000, lakh2: 100000, karod2: 10000000,
+  // ── English ──
+  zero: 0, oh: 0,
+  one: 1, won: 1, wan: 1,
+  two: 2, to: 2, too: 2, tu: 2,
+  three: 3, tree: 3, thr: 3,
+  four: 4, for: 4, fore: 4,
+  five: 5,
+  six: 6, sex: 6,
+  seven: 7,
+  eight: 8, ate: 8,
+  nine: 9,
+  ten: 10,
+  eleven: 11,
+  twelve: 12,
+  thirteen: 13,
+  fourteen: 14,
+  fifteen: 15,
+  sixteen: 16,
+  seventeen: 17,
+  eighteen: 18,
+  nineteen: 19,
+  twenty: 20,
+  "twenty-one": 21, "twenty-two": 22, "twenty-three": 23, "twenty-four": 24,
+  "twenty-five": 25, "twenty-six": 26, "twenty-seven": 27, "twenty-eight": 28, "twenty-nine": 29,
+  thirty: 30,
+  "thirty-one": 31, "thirty-two": 32, "thirty-three": 33, "thirty-four": 34,
+  "thirty-five": 35, "thirty-six": 36, "thirty-seven": 37, "thirty-eight": 38, "thirty-nine": 39,
+  forty: 40, fourty: 40,
+  fifty: 50,
+  sixty: 60,
+  seventy: 70,
+  eighty: 80,
+  ninety: 90,
+  hundred: 100,
+  thousand: 1_000,
+  lakh: 1_00_000, lac: 1_00_000, lakhs: 1_00_000, lacs: 1_00_000,
+  crore: 1_00_00_000, crores: 1_00_00_000,
+  // ── Hindi transliterated ──
+  ek: 1, do: 2, teen: 3, char: 4, paanch: 5, panch: 5,
+  chhe: 6, chh: 6, saat: 7, aath: 8, nau: 9, das: 10,
+  gyarah: 11, barah: 12, terah: 13, chaudah: 14, pandrah: 15,
+  solah: 16, satrah: 17, atharah: 18, unnis: 19,
+  bees: 20, ikkees: 21, baees: 22, teis: 23, chaubees: 24, pachchees: 25,
+  chhabbees: 26, sattaees: 27, atthaees: 28, untees: 29,
+  tees: 30, iktees: 31, batees: 32, taitees: 33, chotees: 34, paintees: 35,
+  chhattees: 36, saintees: 37, artees: 38, untalees: 39,
+  chalis: 40, iktalis: 41, byalis: 42, tentalis: 43, chavalis: 44, paintalis: 45,
+  chhiyalis: 46, saintalis: 47, artalis: 48, unchas: 49,
+  pachas: 50, ikyawan: 51, baawan: 52, tirpan: 53, chauwan: 54, pachpan: 55,
+  chhappan: 56, sattawan: 57, atthawan: 58, unsath: 59,
+  saath: 60, iksath: 61, basath: 62, tirsath: 63, chausath: 64, painsath: 65,
+  chhiyasath: 66, sadsath: 67, arsath: 68, unsattar: 69,
+  sattar: 70, ikattar: 71, bahattar: 72, tihattar: 73, chauhattar: 74,
+  pachhattar: 75, chhihattar: 76, sathattar: 77, athattar: 78, unchasi: 79,
+  assi: 80, ikyasi: 81, bayasi: 82, tirasi: 83, chaurasi: 84, pachasi: 85,
+  chhiyasi: 86, satasi: 87, athasi: 88, navasi: 89,
+  nabbe: 90, ikyanabbe: 91, banabbe: 92, tiranabbe: 93, cauranabe: 94, pachanabbe: 95,
+  chhiyanabbe: 96, sattanabbe: 97, athanabbe: 98, ninyanabbe: 99,
+  sau: 100, hazaar: 1_000, hajar: 1_000,
+  karor: 1_00_00_000, karod: 1_00_00_000,
+  // ── Gujarati transliterated ──
+  eka: 1, be: 2, tran: 3, pancha: 5,
+  nav: 9, agiyar: 11, bar: 12, ter: 13, chaud: 14, pandhar: 15,
+  sol: 16, athar: 18, ognis: 19, vis: 20,
+  ekvis: 21, bavis: 22, travis: 23, chovis: 24, panchvis: 25,
+  chhavis: 26, satvis: 27, athvis: 28, ogantris: 29,
+  tris: 30, ekattris: 31, battris: 32, tetris: 33, choatris: 34, paintris: 35,
+  chhattris: 36, saadtris: 37, adtris: 38, oganchalis: 39,
+  chalees: 40, ekachalis: 41, bachalis: 42, tetrachalis: 43, chochalis: 44,
+  panchalis: 50, sath: 60, ashi: 80, navvu: 90,
+  so: 100, hazar: 1_000, lakh2: 1_00_000, karod2: 1_00_00_000,
 };
 
 /** Hindi Devanagari digits/multipliers */
@@ -83,9 +135,10 @@ const HINDI_NUM: Record<string, number> = {
   "पाँच": 5, "पांच": 5, "छह": 6, "छः": 6, "सात": 7, "आठ": 8,
   "नौ": 9, "दस": 10, "ग्यारह": 11, "बारह": 12, "तेरह": 13, "चौदह": 14,
   "पंद्रह": 15, "सोलह": 16, "सत्रह": 17, "अठारह": 18, "उन्नीस": 19,
-  "बीस": 20, "तीस": 30, "चालीस": 40, "पचास": 50, "साठ": 60,
+  "बीस": 20, "इक्कीस": 21, "बाईस": 22, "तेईस": 23, "चौबीस": 24, "पच्चीस": 25,
+  "तीस": 30, "चालीस": 40, "पचास": 50, "साठ": 60,
   "सत्तर": 70, "अस्सी": 80, "नब्बे": 90, "सौ": 100,
-  "हज़ार": 1000, "हजार": 1000, "लाख": 100000, "करोड़": 10000000, "करोड": 10000000,
+  "हज़ार": 1_000, "हजार": 1_000, "लाख": 1_00_000, "करोड़": 1_00_00_000, "करोड": 1_00_00_000,
 };
 
 /** Gujarati digits/multipliers */
@@ -95,124 +148,100 @@ const GUJARATI_NUM: Record<string, number> = {
   "બાર": 12, "તેર": 13, "ચૌદ": 14, "પંદર": 15, "સોળ": 16, "સત્તર": 17,
   "અઢાર": 18, "ઓગણીસ": 19, "વીસ": 20, "ત્રીસ": 30, "ચાળીસ": 40,
   "પચાસ": 50, "સાઠ": 60, "સિત્તેર": 70, "એંસી": 80, "નેવું": 90,
-  "સો": 100, "હજાર": 1000, "લાખ": 100000, "કરોડ": 10000000,
+  "સો": 100, "હજાર": 1_000, "લાખ": 1_00_000, "કરોડ": 1_00_00_000,
 };
 
 /** Hindi Devanagari → English keyword map */
 const HINDI_KEYWORDS: Record<string, string> = {
-  // Buy variants
   "खरीदो": "buy", "खरीद": "buy", "ख़रीदो": "buy", "ख़रीद": "buy",
   "खरीदना": "buy", "खरीदें": "buy", "खरीदिए": "buy", "लो": "buy",
-  "ले लो": "buy", "ले आओ": "buy", "ले": "buy",
-  // Sell variants
+  "ले लो": "buy", "ले आओ": "buy", "ले": "buy", "खरीदी": "buy",
   "बेचो": "sell", "बेच": "sell", "बेचना": "sell", "बेचदो": "sell",
   "बेचें": "sell", "बेचिए": "sell", "बेच दो": "sell",
-  // Navigation
   "पोर्टफोलियो": "portfolio", "होल्डिंग्स": "portfolio", "होल्डिंग": "portfolio",
   "मेरा पोर्टफोलियो": "portfolio", "मेरी होल्डिंग": "portfolio",
   "वॉचलिस्ट": "watchlist", "देखो सूची": "watchlist", "निगरानी": "watchlist",
   "मेरी वॉचलिस्ट": "watchlist",
-  // Watchlist actions
   "जोड़ो": "add", "जोड़": "add", "जोड़ दो": "add", "डालो": "add",
   "हटाओ": "remove", "हटा": "remove", "हटा दो": "remove", "निकालो": "remove",
-  // Funds
   "फंड": "funds", "पैसे": "funds", "धन": "funds", "बैलेंस": "funds",
   "मेरे पैसे": "funds", "कितने पैसे": "funds",
-  // Analysis
-  "चार्ट": "chart", "ग्राफ": "chart", "चार्ट दिखाओ": "chart",
-  "समाचार": "news", "खबर": "news", "हेडलाइन": "news", "न्यूज़": "news",
+  "चार्ट": "chart", "ग्राफ": "chart", "चार्ट दिखाओ": "chart", "कैंडल": "chart",
+  "समाचार": "news", "खबर": "news", "हेडलाइन": "news", "न्यूज़": "news", "न्यूज": "news",
   "मूल तत्व": "fundamentals", "बुनियादी": "fundamentals", "फंडामेंटल": "fundamentals",
-  "तकनीकी": "technicals", "टेक्निकल": "technicals",
-  // Help/confirm/cancel
+  "तकनीकी": "technicals", "टेक्निकल": "technicals", "तकनीकी विश्लेषण": "technicals",
   "मदद": "help", "सहायता": "help", "क्या कर सकते": "help",
   "रद्द": "cancel", "रोको": "cancel", "बंद करो": "cancel", "नहीं": "cancel",
   "हाँ": "confirm", "हां": "confirm", "ठीक है": "confirm", "ठीक": "confirm",
   "हो जाए": "confirm", "करो": "confirm", "ओके": "confirm",
-  // History
   "इतिहास": "history", "ऑर्डर बुक": "history", "ऑर्डर": "history",
-  // Brokers
   "दलाल": "brokers", "ब्रोकर": "brokers",
-  // Auth
   "लॉगआउट": "logout", "साइन आउट": "logout", "बाहर निकलो": "logout",
-  // Market
   "टॉप गेनर्स": "top gainers", "सबसे ऊपर": "top gainers", "गेनर": "gainers",
   "टॉप लूजर्स": "top losers", "लूजर": "losers", "गिरावट": "losers",
-  // Exchanges
   "एनएसई": "nse", "बीएसई": "bse",
-  // Brokers names
   "जेरोधा": "zerodha", "ज़ेरोधा": "zerodha",
   "अपस्टॉक्स": "upstox", "अपस्टॉक": "upstox",
   "एंजेल वन": "angelone", "एंजेल": "angelone",
-  // Stock action words
   "शेयर": "shares", "शेअर": "shares", "स्टॉक": "stock",
   "दिखाओ": "show", "देखो": "show", "खोलो": "open",
-  // Filler words to remove
   "की": "", "का": "", "के": "", "में": "in", "पर": "at", "से": "from",
   "को": "", "ने": "", "मेरे": "my", "मेरी": "my", "मेरा": "my",
   "रुपये": "rupees", "रुपए": "rupees", "रूपए": "rupees", "रूपये": "rupees",
   "कीमत": "price", "भाव": "price", "प्राइस": "price",
   "लगाओ": "invest", "निवेश": "invest", "निवेश करो": "invest",
   "कितनी": "", "कितना": "",
+  "वर्थ": "worth",
 };
 
 /** Gujarati script → English keyword map */
 const GUJARATI_KEYWORDS: Record<string, string> = {
-  // Buy variants
   "ખરીદો": "buy", "ખરીદ": "buy", "ખરીદવું": "buy", "ખરીદ કરો": "buy",
-  "ખરીદી કરો": "buy", "લો": "buy",
-  // Sell variants
+  "ખરીદી કરો": "buy", "લો": "buy", "ખરીદી": "buy",
   "વેચો": "sell", "વેચ": "sell", "વેચવું": "sell", "વેચ દો": "sell",
   "વેચી નાખો": "sell",
-  // Navigation
   "પોર્ટફોલિઓ": "portfolio", "હોલ્ડિંગ": "portfolio", "મારો પોર્ટફોલિઓ": "portfolio",
   "વૉચલિસ્ટ": "watchlist", "વૉચ લિસ્ટ": "watchlist", "મારી વૉચ": "watchlist",
-  // Watchlist actions
   "જોડો": "add", "ઉમેરો": "add", "ઉમેર": "add",
   "દૂર કરો": "remove", "કાઢો": "remove", "હટાવો": "remove",
-  // Funds
   "ભંડોળ": "funds", "પૈસા": "funds", "બૅલેન્સ": "funds", "ફંડ": "funds",
-  // Analysis
-  "ચાર્ટ": "chart", "ગ્રાફ": "chart",
+  "ચાર્ટ": "chart", "ગ્રાફ": "chart", "કૅન્ડ": "chart",
   "સમાચાર": "news", "ખબર": "news", "ન્યૂઝ": "news",
   "મૂળ": "fundamentals", "ફંડામેન્ટલ": "fundamentals",
   "ટેક્નિકલ": "technicals",
-  // Help/confirm/cancel
   "મદદ": "help", "સહાય": "help",
   "રદ": "cancel", "બંધ": "cancel", "ના": "cancel",
-  "હા": "confirm", "ઠીક": "confirm", "ઓકે": "confirm", "ઓ.કે.": "confirm",
-  // History
+  "હા": "confirm", "ઠીક": "confirm", "ઓકે": "confirm",
   "ઇતિહાસ": "history", "ઓર્ડર": "history",
-  // Brokers
   "બ્રોકર": "brokers",
-  // Auth
   "લૉગ આઉટ": "logout", "બહાર નીકળો": "logout",
-  // Market
   "ટોપ ગેઇનર": "top gainers", "ગેઇનર": "gainers",
   "ટૉપ લૂઝ": "top losers", "લૂઝ": "losers",
-  // Exchanges
   "એનએસઈ": "nse", "બીએસઈ": "bse",
-  // Broker names
   "ઝેરોધા": "zerodha", "અપ્સ્ટૉક્સ": "upstox", "એન્જેલ": "angelone",
-  // Stock words
   "શેર": "shares", "સ્ટૉક": "stock",
   "દેખાડો": "show", "ખોલો": "open",
-  // Filler
   "ની": "", "નો": "", "નુ": "", "માં": "in", "પર": "at", "થી": "from",
   "રૂ": "rupees", "રૂપિયા": "rupees", "રૂ.": "rupees",
   "ભાવ": "price", "કિંમત": "price",
   "લગાવો": "invest", "રોકો": "invest",
   "મારો": "my", "મારી": "my", "મારું": "my",
+  "વર્થ": "worth",
 };
 
 // ─── Normalization Helpers ─────────────────────────────────────────────────────
 
+/** Safe regex escape for map keys that may contain regex special chars */
+const escapeRegex = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const replaceFromMap = (text: string, map: Record<string, string | number>): string => {
   let out = text;
+  // Sort by length descending so multi-word phrases match before single words
   const sorted = Object.entries(map).sort((a, b) => b[0].length - a[0].length);
   for (const [word, val] of sorted) {
     try {
-      out = out.replace(new RegExp(word, "g"), ` ${String(val)} `);
-    } catch { /* skip bad regex chars */ }
+      out = out.replace(new RegExp(escapeRegex(word), "g"), ` ${String(val)} `);
+    } catch { /* skip */ }
   }
   return out;
 };
@@ -222,27 +251,72 @@ const normalizeGujaratiNumbers = (text: string): string => replaceFromMap(text, 
 const translateHindi = (text: string): string => replaceFromMap(text, HINDI_KEYWORDS);
 const translateGujarati = (text: string): string => replaceFromMap(text, GUJARATI_KEYWORDS);
 
-/** Parse English number words + digit strings into numeric values */
+/**
+ * Converts English number words into numeric values.
+ * Handles 4-8 digit numbers correctly via accumulator + multiplier chain.
+ *
+ * Examples:
+ *  "twelve thousand five hundred" → "12500"
+ *  "two lakh fifty thousand"      → "250000"
+ *  "five crore"                   → "50000000"
+ *  "fifty"                        → "50"
+ */
 const wordsToNumbers = (text: string): string => {
   const tokens = text.split(/\s+/);
   const out: string[] = [];
-  let current = 0;
+
+  let current = 0;   // running total for current group
+  let sub = 0;       // sub-accumulator (below the current multiplier)
   let hasNumber = false;
+
   const flush = () => {
-    if (hasNumber) out.push(String(current));
+    if (hasNumber) {
+      out.push(String(current + sub));
+    }
     current = 0;
+    sub = 0;
     hasNumber = false;
   };
+
   for (const raw of tokens) {
     const t = raw.toLowerCase().replace(/[^a-z0-9.]/g, "");
+
+    // Digit string — treat as literal number
+    if (/^\d+(\.\d+)?$/.test(t)) {
+      flush();
+      out.push(t);
+      continue;
+    }
+
     if (t in NUMBER_WORDS) {
       const n = NUMBER_WORDS[t]!;
-      if (n >= 100) current = (current || 1) * n;
-      else current += n;
       hasNumber = true;
+
+      if (n >= 1_00_00_000) {
+        // Crore-level multiplier
+        const base = current + sub || 1;
+        current = base * n;
+        sub = 0;
+      } else if (n >= 1_00_000) {
+        // Lakh-level multiplier
+        const base = sub || current || 1;
+        current += base * n;
+        sub = 0;
+      } else if (n >= 1_000) {
+        // Thousand-level multiplier
+        const base = sub || 1;
+        current += base * n;
+        sub = 0;
+      } else if (n === 100) {
+        // Hundred multiplier: applies to sub (e.g. "five hundred" = 5*100)
+        sub = (sub || 1) * 100;
+      } else {
+        // Plain digit 1-99: add to sub
+        sub += n;
+      }
     } else {
       flush();
-      out.push(raw);
+      if (t) out.push(raw);
     }
   }
   flush();
@@ -268,6 +342,11 @@ const normalizeText = (text: string): string => {
     // Buy synonyms
     [/\bbye\b/g, "buy"], [/\bboy\b/g, "buy"], [/\bbuys\b/g, "buy"],
     [/\bpurchase\b/g, "buy"], [/\binvest\b/g, "buy"], [/\bget\b/g, "buy"],
+    [/\bkharido\b/g, "buy"], [/\bkharid\b/g, "buy"], [/\bkhareed\b/g, "buy"],
+    [/\bkhareedo\b/g, "buy"], [/\bkhareedna\b/g, "buy"], [/\bkharidi\b/g, "buy"],
+    // Sell synonyms (transliterated)
+    [/\bbecho\b/g, "sell"], [/\bbech\b/g, "sell"], [/\bbeecho\b/g, "sell"],
+    [/\bvecho\b/g, "sell"], [/\bvech\b/g, "sell"], [/\bvechu\b/g, "sell"],
     // Share synonyms
     [/\bshair(s)?\b/g, "shares"], [/\bshear(s)?\b/g, "shares"],
     [/\bqty\b/g, "quantity"], [/\bsher(s)?\b/g, "shares"],
@@ -276,6 +355,7 @@ const normalizeText = (text: string): string => {
     [/\brupee(s)?\b/g, "rupees"], [/\brupies\b/g, "rupees"],
     [/\bruppes\b/g, "rupees"], [/\brupe(s)?\b/g, "rupees"],
     [/\binr\b/g, "rupees"], [/\b₹\b/g, "rupees"],
+    [/\brs\.?\b/g, "rupees"],
     // Navigation views
     [/\bwatch\s*list\b/g, "watchlist"], [/\bport\s*folio\b/g, "portfolio"],
     [/\bholding(s)?\b/g, "portfolio"], [/\bposition(s)?\b/g, "portfolio"],
@@ -298,7 +378,7 @@ const normalizeText = (text: string): string => {
     // Analysis
     [/\btechnical\s*analysis\b/g, "technicals"],
     [/\bfundamental\s*analysis\b/g, "fundamentals"],
-    [/\bcandle(stick)?\b/g, "chart"],
+    [/\bcandle(stick)?\b/g, "chart"], [/\bcandal\b/g, "chart"],
     [/\bfinancial(s)?\b/g, "fundamentals"],
     [/\bresult(s)?\b/g, "fundamentals"],
     [/\bindicator(s)?\b/g, "technicals"],
@@ -309,28 +389,28 @@ const normalizeText = (text: string): string => {
     [/\bproceed\b/g, "confirm"], [/\bgo ahead\b/g, "confirm"],
     [/\bnope\b/g, "cancel"], [/\bnever mind\b/g, "cancel"],
     [/\babort\b/g, "cancel"], [/\bstop\b/g, "cancel"],
-    // Hindi transliterated
-    [/\bkharido\b/g, "buy"], [/\bkharid\b/g, "buy"], [/\bkhareed\b/g, "buy"],
-    [/\bkhareedo\b/g, "buy"], [/\bkhareedna\b/g, "buy"],
-    [/\bbecho\b/g, "sell"], [/\bbech\b/g, "sell"], [/\bbeecho\b/g, "sell"],
+    // Hindi transliterated navigation/filler
     [/\bdikhao\b/g, "show"], [/\bdekho\b/g, "show"],
     [/\bkholo\b/g, "open"], [/\bkhol\b/g, "open"],
     [/\blaga\s*o\b/g, "invest"], [/\blagao\b/g, "invest"],
+    [/\bumero\b/g, "add"], [/\bumerto\b/g, "add"],
     [/\bkaro\b/g, ""], [/\bkarna\b/g, ""], [/\bkarni\b/g, ""],
     [/\bwala\b/g, ""], [/\bwali\b/g, ""],
     [/\bki\b/g, ""], [/\bka\b/g, ""], [/\bke\b/g, ""],
     [/\bse\b/g, "from"], [/\bpar\b/g, "at"],
     [/\bmere\b/g, "my"], [/\bmera\b/g, "my"],
-    // Gujarati transliterated
-    [/\bvecho\b/g, "sell"], [/\bvech\b/g, "sell"],
-    [/\bumero\b/g, "add"], [/\bumerto\b/g, "add"],
+    // Gujarati transliterated filler
     [/\bno\b/g, ""], [/\bni\b/g, ""], [/\bnu\b/g, ""],
     [/\bma\b/g, "in"], [/\bne\b/g, ""],
-    [/\bdekhado\b/g, "show"], [/\bdekho\b/g, "show"],
-    // More Hindi/Gujarati positional filler
+    [/\bdekhado\b/g, "show"],
+    // Generic English
     [/\bshow\b/g, "show"], [/\bopen\b/g, "open"],
     [/\bcheck\b/g, "search"], [/\bfind\b/g, "search"],
     [/\btell me\b/g, "search"], [/\bwhat is\b/g, "search"],
+    [/\bquote\b/g, "search"], [/\bltp\b/g, "search"],
+    [/\bprice of\b/g, "search"],
+    // Worth context (for amount-based buys)
+    [/\bworth\b/g, "worth"], [/\bke liye\b/g, "worth"],
   ];
 
   for (const [re, val] of replacements) t = t.replace(re, ` ${val} `);
@@ -372,7 +452,7 @@ const phonetic = (s: string) =>
     .replace(/v/g, "b")
     .replace(/w/g, "b")
     .replace(/y/g, "i")
-    .replace(/(.)\1+/g, "$1")
+    .replace(/(.)\\1+/g, "$1")
     .replace(/[aeiou]/g, "");
 
 const sim = (a: string, b: string): number => {
@@ -417,7 +497,6 @@ const scorePhrase = (phrase: string): Candidate => {
 /**
  * Extracts the most likely NSE/BSE symbol from a spoken phrase.
  * Works for English, Hindi, and Gujarati spoken names.
- * Threshold lowered to 0.50 for broader fuzzy matching.
  */
 const bestSymbolMatch = (raw: string): string => {
   const cleaned = ` ${raw.toLowerCase()} `
@@ -436,7 +515,6 @@ const bestSymbolMatch = (raw: string): string => {
       if (cand.score > best.score + 0.02) best = cand;
     }
   }
-  // Threshold: 0.50 (was 0.58) — more fuzzy
   if (best.symbol && best.score >= 0.50) return best.symbol;
   return cleaned.toUpperCase().replace(/[^A-Z0-9&]/g, "");
 };
@@ -458,19 +536,13 @@ const detectExchange = (text: string): "NSE" | "BSE" | undefined => {
   return undefined;
 };
 
-/**
- * Extract ALL numbers from the normalized text.
- * Returns them in order of appearance with a "type" guess.
- */
+/** Extract ALL numbers from the normalized text. */
 const extractNumbers = (text: string): number[] => {
   const matches = text.match(/\b\d+(?:\.\d+)?\b/g) ?? [];
-  return matches.map(Number);
+  return matches.map(Number).filter((n) => !isNaN(n));
 };
 
-/**
- * Detect the primary action from any position in the text.
- * Uses keyword presence rather than position — sequence-independent.
- */
+/** Detect the primary action from any position in the text. */
 const detectAction = (text: string): VoiceAction | null => {
   // Trade actions (highest priority)
   if (/\bbuy\b/.test(text)) return "buy";
@@ -520,7 +592,6 @@ const BROKER_FILLER = /\b(nse|bse|zerodha|upstox|angelone|angel|on|from|using|th
 
 /**
  * Sequence-independent command parser.
- *
  * Strategy:
  * 1. Normalize text (translate scripts, synonyms, number words)
  * 2. Detect action keyword(s) — from ANY position
@@ -535,43 +606,34 @@ const parseCommandInternal = (text: string): VoiceCommandResult => {
   const action = detectAction(normalized);
   const numbers = extractNumbers(normalized);
 
-  // ── Handle non-trade actions that don't need a symbol ──────────────────────
-
-  // PIN detection (before action checks)
+  // ── PIN detection (before action checks) ──────────────────────────────────
   const pinMatch = normalized.match(/\bpin\b\s*(?:is\s*)?(\d{4,6})/);
   if (pinMatch) return { command: text, action: "pin", pin: pinMatch[1]!, suggestion: "verify account" };
 
-  // Confirm/cancel — pure keyword match
+  // ── Confirm/cancel — pure keyword match ───────────────────────────────────
   if (/^(confirm|yes|yeah|yep|ok|okay|place it|do it|proceed|go ahead)\s*$/.test(normalized))
     return { command: text, action: "confirm", suggestion: "confirm" };
   if (/^(no|cancel|stop|abort|never mind|nevermind)\s*$/.test(normalized))
     return { command: text, action: "cancel", suggestion: "cancel" };
 
-  // Help
   if (action === "help" || /\b(help|what can you do|commands?)\b/.test(normalized))
     return { command: text, action: "help", suggestion: "help" };
-
-  // Logout
   if (action === "logout")
     return { command: text, action: "logout", suggestion: "sign out" };
-
-  // Admin
   if (action === "admin")
     return { command: text, action: "admin", suggestion: "open admin" };
 
-  // Top gainers/losers
   if (action === "gainers" || /\b(top gainers?|best performers?)\b/.test(normalized))
     return { command: text, action: "gainers", suggestion: "top gainers" };
   if (action === "losers" || /\b(top losers?|worst)\b/.test(normalized))
     return { command: text, action: "losers", suggestion: "top losers" };
 
-  // ── Add funds ──────────────────────────────────────────────────────────────
   if (action === "add_funds")
     return { command: text, action: "add_funds", broker, suggestion: "add funds" };
 
   // ── Broker-scoped filter views ─────────────────────────────────────────────
   const viewHit = normalized.match(/\b(portfolio|holdings|positions|order\s*book|orders|history|trades|watchlist|funds)\b/);
-  const wantsAll = /\ball\s+(brokers?|accounts?)|\ball\b\s*$/.test(normalized) && !!viewHit;
+  const wantsAll = /\ball\s+(brokers?|accounts?)|\\ball\b\s*$/.test(normalized) && !!viewHit;
   if (viewHit && (broker || wantsAll) && !/\b(buy|sell|invest|add|remove)\b/.test(normalized)) {
     const word = viewHit[1]!;
     const target: NonNullable<VoiceCommandResult["target"]> =
@@ -586,7 +648,6 @@ const parseCommandInternal = (text: string): VoiceCommandResult => {
     };
   }
 
-  // Broker selection
   if (broker && /\b(broker|account|use|select|switch|place|order|connect|choose|with|set)\b/.test(normalized))
     return { command: text, action: "select_broker", broker, suggestion: `use ${broker}` };
 
@@ -604,7 +665,6 @@ const parseCommandInternal = (text: string): VoiceCommandResult => {
 
   // ── Watchlist CRUD ─────────────────────────────────────────────────────────
   if (action === "add_watchlist") {
-    // Extract symbol from everything that's not "add" or "watchlist"
     const rest = normalized.replace(/\b(add|to|watchlist)\b/g, " ").trim();
     const symbol = rest ? bestSymbolMatch(rest) : "";
     return { command: text, action: "add_watchlist", symbol: symbol || undefined, suggestion: `watch ${symbol}` };
@@ -626,22 +686,15 @@ const parseCommandInternal = (text: string): VoiceCommandResult => {
 
   // ── TRADE PARSER (buy/sell) — completely sequence-independent ──────────────
   if (action === "buy" || action === "sell") {
-    // Strip action/filler keywords and broker/exchange markers to isolate stock + numbers
     const stripped = normalized
       .replace(/\b(buy|sell|invest|shares?|stocks?|quantity|qty|rupees|worth|of|at|for|on|from|using|through|via|nse|bse|zerodha|upstox|angelone|angel|in|the|please|me|my)\b/g, " ")
       .replace(/\s+/g, " ")
       .trim();
 
-    // All numbers from the ORIGINAL normalized (before stripping) 
     const allNums = extractNumbers(normalized);
 
-    // Determine if numbers look like quantity vs price vs amount
-    // Heuristic: numbers < 1000 with no "rupees"/"worth" context → quantity
-    //            numbers >= 500 with rupees context → amount
-    //            numbers >= 100 with "at" context → limit price
-    const hasRupeesContext = /\brupees\b/.test(normalized);
+    const hasRupeesContext = /\brupees\b|\bworth\b/.test(normalized);
     const hasAtContext = /\bat\s+\d|\d\s+at\b/.test(normalized);
-    const hasWorthContext = /\bworth\b/.test(normalized);
 
     let quantity: number | undefined;
     let limitPrice: number | undefined;
@@ -651,21 +704,21 @@ const parseCommandInternal = (text: string): VoiceCommandResult => {
       quantity = 1;
     } else if (allNums.length === 1) {
       const n = allNums[0]!;
-      if (hasRupeesContext || hasWorthContext) {
+      if (hasRupeesContext) {
+        // "buy fifty thousand rupees of TCS" → amountInr=50000
         amountInr = n;
       } else if (hasAtContext && n > 100) {
-        // Ambiguous: could be qty "buy 10 tcs at 3200" — but single number with "at" means price
         quantity = 1;
         limitPrice = n;
-      } else if (n < 1000) {
+      } else if (n < 1_000) {
         quantity = Math.max(1, Math.floor(n));
       } else {
-        amountInr = n; // Large number → assume rupee amount
+        // Large number without rupees context: treat as amount
+        amountInr = n;
       }
     } else if (allNums.length >= 2) {
-      // Two or more numbers: smaller = quantity, larger = price (unless rupees context)
-      if (hasRupeesContext || hasWorthContext) {
-        // "buy 10 rupees worth" unlikely; treat largest as amount
+      if (hasRupeesContext) {
+        // largest is the amount
         amountInr = Math.max(...allNums);
       } else {
         const sorted = [...allNums].sort((a, b) => a - b);
@@ -692,7 +745,6 @@ const parseCommandInternal = (text: string): VoiceCommandResult => {
       };
     }
 
-    // No symbol — open search fallback
     return {
       command: text, action, quantity, limitPrice, amountInr, exchange, broker,
       suggestion: `${action} — which stock?`,
@@ -771,7 +823,6 @@ export const useVoiceCommands = () => {
   const setLanguage = useCallback((lang: VoiceLanguage) => {
     langRef.current = lang;
     setLanguageState(lang);
-    // Recreate recognition with new language
     try { recognitionRef.current?.abort?.(); } catch { /* noop */ }
     recognitionRef.current = createRecognition(lang);
   }, [createRecognition]);
@@ -782,7 +833,6 @@ export const useVoiceCommands = () => {
 
   const startListening = useCallback(
     (onResult: (result: VoiceCommandResult) => void) => {
-      // Always recreate with current language to ensure it's fresh
       try { recognitionRef.current?.abort?.(); } catch { /* noop */ }
       recognitionRef.current = createRecognition(langRef.current);
       const rec = recognitionRef.current;
@@ -800,7 +850,7 @@ export const useVoiceCommands = () => {
           alternatives.push(result[i].transcript as string);
         }
 
-        // Score every alternative; pick the highest-confidence non-unknown result
+        // Score every alternative; pick highest confidence non-unknown result
         let bestResult = parseCommandInternal(text);
         let bestConf = confidence(bestResult);
 
@@ -830,7 +880,7 @@ export const useVoiceCommands = () => {
           }
         }
 
-        // Also try combining all alternatives' normalized text
+        // Also try combining first 3 alternatives' normalized text
         if (bestResult.action === "unknown" && alternatives.length > 1) {
           const combined = alternatives.slice(0, 3).join(" ");
           const parsed = parseCommandInternal(combined);

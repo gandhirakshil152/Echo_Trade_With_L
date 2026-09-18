@@ -34,6 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
+import { useCommandPredictor } from "@/hooks/useCommandPredictor";
 import { useStockData } from "@/hooks/useStockData";
 import { useVoiceCommands, type VoiceCommandResult } from "@/hooks/useVoiceCommands";
 import { estimateCharges, totalChargesFor } from "@/lib/brokerage";
@@ -83,7 +84,8 @@ function Terminal() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { stocks, indices, priceOf } = useStockData();
-  const { isListening, transcript, supported, language, setLanguage, startListening, stopListening, speak } = useVoiceCommands();
+  const { isListening, transcript, supported, language, setLanguage, startListening, stopListening, speak, parseCommand } = useVoiceCommands();
+  const { predict: geminiPredict, hasGemini } = useCommandPredictor();
 
   const fetchWorkspace = useServerFn(getWorkspace);
   const { data: workspace } = useQuery({
@@ -240,6 +242,21 @@ function Terminal() {
 
   const handleCommand = async (r: VoiceCommandResult) => {
     const heard = r.command;
+
+    // If rule-based parser was uncertain, try Gemini fallback
+    if (r.action === "unknown" && heard.length > 2) {
+      pushLog(heard, hasGemini ? "Thinking…" : "Command not recognised.", false);
+      if (hasGemini) {
+        const predicted = await geminiPredict(heard);
+        if (predicted && predicted.action !== "unknown") {
+          await handleCommand(predicted);
+          return;
+        }
+      }
+      speak("Sorry, I didn't understand. Please try again.");
+      return;
+    }
+
     switch (r.action) {
       case "buy":
       case "sell": {
@@ -472,6 +489,10 @@ function Terminal() {
               onToggle={() => (isListening ? stopListening() : startListening(handleCommand))}
               language={language}
               onLanguageChange={setLanguage}
+              onExampleClick={(text) => {
+                const parsed = parseCommand(text);
+                void handleCommand(parsed);
+              }}
             />
 
             {selectedQuote ? (

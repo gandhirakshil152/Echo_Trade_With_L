@@ -321,6 +321,28 @@ var ExternalLink = createLucideIcon("external-link", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Globe = createLucideIcon("globe", [
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "10",
+		key: "1mglay"
+	}],
+	["path", {
+		d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20",
+		key: "13o1zl"
+	}],
+	["path", {
+		d: "M2 12h20",
+		key: "9i4pu4"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var KeyRound = createLucideIcon("key-round", [["path", {
 	d: "M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z",
 	key: "1s6t7t"
@@ -435,6 +457,16 @@ var Mic = createLucideIcon("mic", [
 		key: "s6n7sd"
 	}]
 ]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Minus = createLucideIcon("minus", [["path", {
+	d: "M5 12h14",
+	key: "1ays0h"
+}]]);
 /**
 * @license lucide-react v0.575.0 - ISC
 *
@@ -817,5 +849,15 @@ var X = createLucideIcon("x", [["path", {
 	d: "m6 6 12 12",
 	key: "d8bk6v"
 }]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Zap = createLucideIcon("zap", [["path", {
+	d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",
+	key: "1xq2db"
+}]]);
 //#endregion
-export { ChartColumn as A, LoaderCircle as C, ChevronUp as D, CircleCheck as E, Activity as F, BadgeIndianRupee as M, AudioLines as N, ChevronDown as O, ArrowDownToLine as P, Lock as S, ExternalLink as T, Newspaper as _, TrendingDown as a, MicOff as b, Star as c, Smartphone as d, ShieldCheck as f, Plug as g, Plus as h, TrendingUp as i, Building2 as j, ChartLine as k, StarOff as l, QrCode as m, Wallet as n, Terminal as o, Search as p, Users as r, Sun as s, X as t, Sparkles as u, Moon as v, KeyRound as w, LogOut as x, Mic as y };
+export { ChevronUp as A, LogOut as C, Globe as D, KeyRound as E, BadgeIndianRupee as F, AudioLines as I, ArrowDownToLine as L, ChartLine as M, ChartColumn as N, ExternalLink as O, Building2 as P, Activity as R, MicOff as S, LoaderCircle as T, Plug as _, TrendingUp as a, Minus as b, Sun as c, Sparkles as d, Smartphone as f, Plus as g, QrCode as h, Users as i, ChevronDown as j, CircleCheck as k, Star as l, Search as m, X as n, TrendingDown as o, ShieldCheck as p, Wallet as r, Terminal as s, Zap as t, StarOff as u, Newspaper as v, Lock as w, Mic as x, Moon as y };

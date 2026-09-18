@@ -320,6 +320,23 @@ function replaceData(prevData, data, options) {
 	else if (options.structuralSharing !== false) return replaceEqualDeep(prevData, data);
 	return data;
 }
+/**
+* Intended to be passed as a query's `placeholderData` option, for example
+* `placeholderData: keepPreviousData`. Instead of resetting the query's data to `undefined` while a new
+* query key is fetching, it keeps displaying the previously fetched data until the new data arrives.
+*
+* @example
+* ```ts
+* new QueryObserver(queryClient, {
+*   queryKey: ['posts', page],
+*   queryFn: () => fetchPosts(page),
+*   placeholderData: keepPreviousData,
+* })
+* ```
+*/
+function keepPreviousData(previousData) {
+	return previousData;
+}
 function addToEnd(items, item, max = 0) {
 	const newItems = [...items, item];
 	return max && newItems.length > max ? newItems.slice(1) : newItems;
@@ -3241,4 +3258,4 @@ var QueryClient = class {
 	}
 };
 //#endregion
-export { shouldThrowError as a, noop as i, QueryObserver as n, notifyManager as r, QueryClient as t };
+export { noop as a, keepPreviousData as i, QueryObserver as n, shouldThrowError as o, notifyManager as r, QueryClient as t };

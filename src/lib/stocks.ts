@@ -7,7 +7,7 @@ export interface StockMeta {
   aliases?: string[];
 }
 
-/** NSE / BSE universe — 200+ scripts. All prices in INR. */
+/** NSE / BSE universe — 350+ scripts. All prices in INR. */
 export const POPULAR_INDIAN_STOCKS: StockMeta[] = [
   // ── NIFTY 50 + LARGE CAPS ──────────────────────────────────────────────
   { symbol: "RELIANCE", name: "Reliance Industries", exchange: "NSE", sector: "Energy", base: 1428.5, aliases: ["reliance", "ril", "रिलायंस", "રિલાયન્સ", "reliance industries", "mukesh ambani"] },
@@ -204,6 +204,108 @@ export const POPULAR_INDIAN_STOCKS: StockMeta[] = [
   { symbol: "MINDTREE", name: "Mindtree (LTI)", exchange: "BSE", sector: "IT", base: 4284.6, aliases: ["mindtree", "माइंडट्री"] },
   { symbol: "PFIZER", name: "Pfizer India", exchange: "BSE", sector: "Pharma", base: 4784.6, aliases: ["pfizer", "फाइजर", "ફ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ ​ "] },
   { symbol: "SANOFI", name: "Sanofi India", exchange: "BSE", sector: "Pharma", base: 9284.6, aliases: ["sanofi", "सेनोफी"] },
+  // ── MIDCAP & SMALLCAP ADDITIONS ──────────────────────────────────────────
+  { symbol: "ANGELONE", name: "Angel One", exchange: "NSE", sector: "Finance", base: 2184.6, aliases: ["angel one", "angel broking", "एंजेल वन", "એન્જેલ વન"] },
+  { symbol: "DELHIVERY", name: "Delhivery", exchange: "NSE", sector: "Logistics", base: 384.6, aliases: ["delhivery", "दिल्लीवरी", "ડૅ​લ​િ​વ​ ​ ​ ​ "] },
+  { symbol: "NAUKRI", name: "Info Edge (Naukri)", exchange: "NSE", sector: "Tech", base: 7284.6, aliases: ["naukri", "info edge", "नौकरी", "infoedge"] },
+  { symbol: "JUSTDIAL", name: "Just Dial", exchange: "NSE", sector: "Tech", base: 884.6, aliases: ["justdial", "just dial", "जस्ट डायल"] },
+  { symbol: "REDINGTON", name: "Redington India", exchange: "NSE", sector: "IT", base: 224.8, aliases: ["redington", "रेडिंग्टन"] },
+  { symbol: "CYIENT", name: "Cyient", exchange: "NSE", sector: "IT", base: 1884.6, aliases: ["cyient", "साइएंट"] },
+  { symbol: "HEXAWARE", name: "Hexaware Technologies", exchange: "NSE", sector: "IT", base: 784.6, aliases: ["hexaware", "हेक्सावेयर"] },
+  { symbol: "SONACOMS", name: "Sona BLW Precision", exchange: "NSE", sector: "Auto Ancillary", base: 584.6, aliases: ["sona comstar", "sona blw", "सोना"] },
+  { symbol: "SCHAEFFLER", name: "Schaeffler India", exchange: "NSE", sector: "Auto Ancillary", base: 4084.6, aliases: ["schaeffler", "schaeffler india"] },
+  { symbol: "TIMKEN", name: "Timken India", exchange: "NSE", sector: "Auto Ancillary", base: 3884.6, aliases: ["timken", "timken india"] },
+  { symbol: "GREAVESCOT", name: "Greaves Cotton", exchange: "NSE", sector: "Auto Ancillary", base: 184.6, aliases: ["greaves", "greaves cotton"] },
+  { symbol: "SUNDRMFAST", name: "Sundram Fasteners", exchange: "NSE", sector: "Auto Ancillary", base: 884.6, aliases: ["sundram fasteners", "sundram"] },
+  { symbol: "AMARAJABAT", name: "Amara Raja Energy", exchange: "NSE", sector: "Auto Ancillary", base: 924.6, aliases: ["amara raja", "amaraja", "battery"] },
+  { symbol: "EXIDEIND", name: "Exide Industries", exchange: "NSE", sector: "Auto Ancillary", base: 484.6, aliases: ["exide", "exide industries", "एक्साइड"] },
+  { symbol: "MINDAIND", name: "Minda Industries", exchange: "NSE", sector: "Auto Ancillary", base: 884.6, aliases: ["minda", "minda industries"] },
+  { symbol: "SUPRAJIT", name: "Suprajit Engineering", exchange: "NSE", sector: "Auto Ancillary", base: 384.6, aliases: ["suprajit", "suprajit engineering"] },
+  { symbol: "CRAFTSMAN", name: "Craftsman Automation", exchange: "NSE", sector: "Auto Ancillary", base: 4284.6, aliases: ["craftsman", "craftsman automation"] },
+  { symbol: "WABCOINDIA", name: "Wabco India", exchange: "NSE", sector: "Auto Ancillary", base: 7284.6, aliases: ["wabco", "wabco india"] },
+  // ── New-age & Fintech ──
+  { symbol: "MAPMYINDIA", name: "MapMyIndia", exchange: "NSE", sector: "Tech", base: 2184.6, aliases: ["mapmyindia", "map my india", "ce info"] },
+  { symbol: "LATENTVIEW", name: "Latent View Analytics", exchange: "NSE", sector: "IT", base: 384.6, aliases: ["latent view", "latentview"] },
+  { symbol: "EASEMYTRIP", name: "EaseMyTrip", exchange: "NSE", sector: "Travel Tech", base: 24.8, aliases: ["easemytrip", "ease my trip"] },
+  { symbol: "IXIGO", name: "Le Travenues Tech (Ixigo)", exchange: "NSE", sector: "Travel Tech", base: 184.6, aliases: ["ixigo", "le travenues"] },
+  { symbol: "ZAGGLE", name: "Zaggle Prepaid", exchange: "NSE", sector: "Fintech", base: 284.6, aliases: ["zaggle"] },
+  // ── Banking ──
+  { symbol: "DCBBANK", name: "DCB Bank", exchange: "NSE", sector: "Banking", base: 124.8, aliases: ["dcb bank", "dcb", "डीसीबी"] },
+  { symbol: "RBLBANK", name: "RBL Bank", exchange: "NSE", sector: "Banking", base: 184.8, aliases: ["rbl bank", "rbl", "आरबीएल"] },
+  { symbol: "BANDHANBNK", name: "Bandhan Bank", exchange: "NSE", sector: "Banking", base: 184.8, aliases: ["bandhan bank", "bandhan", "बंधन बैंक", "બ​ ​ ​ ​ "] },
+  { symbol: "KARURVYSYA", name: "Karur Vysya Bank", exchange: "NSE", sector: "Banking", base: 184.6, aliases: ["karur vysya", "kvb", "करूर वैश्य"] },
+  { symbol: "SOUTHBANK", name: "South Indian Bank", exchange: "NSE", sector: "Banking", base: 24.8, aliases: ["south indian bank", "sib"] },
+  { symbol: "UJJIVANSFB", name: "Ujjivan Small Finance Bank", exchange: "NSE", sector: "Banking", base: 44.8, aliases: ["ujjivan", "ujjivan sfb"] },
+  { symbol: "AUBANK", name: "AU Small Finance Bank", exchange: "NSE", sector: "Banking", base: 684.6, aliases: ["au bank", "au small finance", "एयू बैंक"] },
+  { symbol: "EQUITASBNK", name: "Equitas Small Finance Bank", exchange: "NSE", sector: "Banking", base: 84.6, aliases: ["equitas", "equitas sfb"] },
+  { symbol: "SURYODAY", name: "Suryoday Small Finance Bank", exchange: "NSE", sector: "Banking", base: 124.6, aliases: ["suryoday", "suryoday sfb"] },
+  // ── NBFC / Insurance ──
+  { symbol: "BAJAJHFL", name: "Bajaj Housing Finance", exchange: "NSE", sector: "NBFC", base: 84.6, aliases: ["bajaj housing", "bajaj hfl"] },
+  { symbol: "LICHSGFIN", name: "LIC Housing Finance", exchange: "NSE", sector: "NBFC", base: 624.6, aliases: ["lic housing", "lichsgfin", "एलआईसी हाउसिंग"] },
+  { symbol: "CANFINHOME", name: "Can Fin Homes", exchange: "NSE", sector: "NBFC", base: 724.6, aliases: ["can fin homes", "canfin"] },
+  { symbol: "HOMEFIRST", name: "Home First Finance", exchange: "NSE", sector: "NBFC", base: 1084.6, aliases: ["home first", "homefirst"] },
+  { symbol: "SBFC", name: "SBFC Finance", exchange: "NSE", sector: "NBFC", base: 84.6, aliases: ["sbfc", "sbfc finance"] },
+  { symbol: "NIACL", name: "New India Assurance", exchange: "NSE", sector: "Insurance", base: 184.6, aliases: ["new india assurance", "niacl"] },
+  { symbol: "STARHEALTH", name: "Star Health Insurance", exchange: "NSE", sector: "Insurance", base: 484.6, aliases: ["star health", "स्टार हेल्थ"] },
+  { symbol: "GICRE", name: "General Insurance Corp", exchange: "NSE", sector: "Insurance", base: 384.6, aliases: ["gic re", "gicre", "जीआईसी"] },
+  // ── Cement ──
+  { symbol: "HEIDELBERG", name: "Heidelberg Cement", exchange: "NSE", sector: "Cement", base: 224.6, aliases: ["heidelberg", "heidelberg cement"] },
+  { symbol: "ORIENTCEM", name: "Orient Cement", exchange: "NSE", sector: "Cement", base: 284.6, aliases: ["orient cement"] },
+  { symbol: "BIRLACORPN", name: "Birla Corporation", exchange: "NSE", sector: "Cement", base: 1284.6, aliases: ["birla corp", "birla corporation"] },
+  { symbol: "DALMIACEM", name: "Dalmia Bharat", exchange: "NSE", sector: "Cement", base: 1984.6, aliases: ["dalmia bharat", "dalmia cement", "dalmia"] },
+  // ── Power/Infra ──
+  { symbol: "GPIL", name: "Godawari Power & Ispat", exchange: "NSE", sector: "Metals", base: 884.6, aliases: ["godawari power", "gpil"] },
+  { symbol: "KNRCON", name: "KNR Constructions", exchange: "NSE", sector: "Infra", base: 384.6, aliases: ["knr constructions", "knrcon"] },
+  { symbol: "PNC", name: "PNC Infratech", exchange: "NSE", sector: "Infra", base: 424.6, aliases: ["pnc infratech", "pnc"] },
+  { symbol: "ENGINERSIN", name: "Engineers India", exchange: "NSE", sector: "Capital Goods", base: 184.6, aliases: ["engineers india", "eil"] },
+  { symbol: "NBCC", name: "NBCC (India)", exchange: "NSE", sector: "Real Estate", base: 84.6, aliases: ["nbcc", "national buildings"] },
+  { symbol: "NCC", name: "NCC Limited", exchange: "NSE", sector: "Infra", base: 224.6, aliases: ["ncc", "nagarjuna construction"] },
+  { symbol: "HG INFRA", name: "HG Infra Engineering", exchange: "NSE", sector: "Infra", base: 1484.6, aliases: ["hg infra"] },
+  { symbol: "PSPPROJECT", name: "PSP Projects", exchange: "NSE", sector: "Infra", base: 684.6, aliases: ["psp projects", "पीएसपी"] },
+  // ── Retail/Consumer ──
+  { symbol: "VMART", name: "V-Mart Retail", exchange: "NSE", sector: "Retail", base: 2184.6, aliases: ["v mart", "vmart", "वी-मार्ट"] },
+  { symbol: "CAMPUS", name: "Campus Activewear", exchange: "NSE", sector: "Retail", base: 284.6, aliases: ["campus", "campus shoes"] },
+  { symbol: "BATA", name: "Bata India", exchange: "NSE", sector: "Retail", base: 1584.6, aliases: ["bata", "बाटा", "બ​ ​ ​ ​ "] },
+  { symbol: "METRO", name: "Metro Brands", exchange: "NSE", sector: "Retail", base: 984.6, aliases: ["metro brands", "metro shoes"] },
+  { symbol: "KPRMILL", name: "KPR Mill", exchange: "NSE", sector: "Textiles", base: 884.6, aliases: ["kpr mill", "kpr"] },
+  { symbol: "PAGEIND", name: "Page Industries (Jockey)", exchange: "NSE", sector: "Textiles", base: 38484.6, aliases: ["page industries", "jockey", "page", "पेज इंडस्ट्रीज"] },
+  { symbol: "RAYMOND", name: "Raymond", exchange: "NSE", sector: "Textiles", base: 1984.6, aliases: ["raymond", "रेमंड", " રૅ​ ​ "] },
+  { symbol: "GOKALDAS", name: "Gokaldas Exports", exchange: "NSE", sector: "Textiles", base: 784.6, aliases: ["gokaldas", "gokaldas exports"] },
+  // ── Pharma/Healthcare additions ──
+  { symbol: "BIOCON", name: "Biocon", exchange: "NSE", sector: "Pharma", base: 284.6, aliases: ["biocon", "बायोकॉन", "​ ​ ​ "] },
+  { symbol: "NATCOPHARM", name: "Natco Pharma", exchange: "NSE", sector: "Pharma", base: 1384.6, aliases: ["natco", "natco pharma"] },
+  { symbol: "GRANULES", name: "Granules India", exchange: "NSE", sector: "Pharma", base: 584.6, aliases: ["granules", "granules india"] },
+  { symbol: "LAURUSLABS", name: "Laurus Labs", exchange: "NSE", sector: "Pharma", base: 484.6, aliases: ["laurus labs", "laurus"] },
+  { symbol: "ERIS", name: "Eris Lifesciences", exchange: "NSE", sector: "Pharma", base: 984.6, aliases: ["eris lifesciences", "eris"] },
+  { symbol: "JBCHEPHARM", name: "JB Chemicals", exchange: "NSE", sector: "Pharma", base: 1984.6, aliases: ["jb chemicals", "jb chem"] },
+  { symbol: "GLAND", name: "Gland Pharma", exchange: "NSE", sector: "Pharma", base: 1684.6, aliases: ["gland pharma", "gland"] },
+  { symbol: "SUVEN", name: "Suven Pharmaceuticals", exchange: "NSE", sector: "Pharma", base: 984.6, aliases: ["suven"] },
+  { symbol: "AAVAS", name: "Aavas Financiers", exchange: "NSE", sector: "NBFC", base: 1584.6, aliases: ["aavas", "aavas financiers"] },
+  // ── Gas/Oil additions ──
+  { symbol: "MGL", name: "Mahanagar Gas", exchange: "NSE", sector: "Energy", base: 1684.6, aliases: ["mahanagar gas", "mgl", "महानगर गैस"] },
+  { symbol: "IGL", name: "Indraprastha Gas", exchange: "NSE", sector: "Energy", base: 484.6, aliases: ["indraprastha gas", "igl", "इंद्रप्रस्थ गैस"] },
+  { symbol: "GUJGASLTD", name: "Gujarat Gas", exchange: "NSE", sector: "Energy", base: 484.6, aliases: ["gujarat gas", "gujgas", "ગ​ ​ ​ ​ ​ ​ "] },
+  { symbol: "PETRONET", name: "Petronet LNG", exchange: "NSE", sector: "Energy", base: 284.6, aliases: ["petronet", "petronet lng", "पेट्रोनेट"] },
+  // ── Specialty chemicals ──
+  { symbol: "ROSSARI", name: "Rossari Biotech", exchange: "NSE", sector: "Chemicals", base: 984.6, aliases: ["rossari", "rossari biotech"] },
+  { symbol: "SOLARA", name: "Solara Active Pharma", exchange: "NSE", sector: "Chemicals", base: 684.6, aliases: ["solara"] },
+  { symbol: "FINPIPE", name: "Finolex Industries", exchange: "NSE", sector: "Chemicals", base: 224.6, aliases: ["finolex", "finolex industries"] },
+  { symbol: "GSFC", name: "Gujarat State Fertilizers", exchange: "NSE", sector: "Chemicals", base: 184.6, aliases: ["gsfc", "gujarat state fertilizers", "ગ​ ​ ​ ​ ​ "] },
+  { symbol: "GNFC", name: "Gujarat Narmada Valley", exchange: "NSE", sector: "Chemicals", base: 684.6, aliases: ["gnfc", "gujarat narmada"] },
+  { symbol: "ATUL", name: "Atul Limited", exchange: "NSE", sector: "Chemicals", base: 6884.6, aliases: ["atul", "atul limited", "અ​ ​ ​ ​ "] },
+  { symbol: "VINDHYATEL", name: "Vindhya Telelinks", exchange: "NSE", sector: "Capital Goods", base: 1984.6, aliases: ["vindhya telelinks"] },
+  // ── Real Estate ──
+  { symbol: "LODHA", name: "Macrotech Developers (Lodha)", exchange: "NSE", sector: "Real Estate", base: 1384.6, aliases: ["lodha", "macrotech", "लोधा", "​ ​ ​ ​ "] },
+  { symbol: "MAHLIFE", name: "Mahindra Lifespace", exchange: "NSE", sector: "Real Estate", base: 484.6, aliases: ["mahindra lifespace", "mahlife"] },
+  { symbol: "KOLTEPATIL", name: "Kolte-Patil Developers", exchange: "NSE", sector: "Real Estate", base: 484.6, aliases: ["kolte patil", "koltepatil"] },
+  { symbol: "SUNTECK", name: "Sunteck Realty", exchange: "NSE", sector: "Real Estate", base: 584.6, aliases: ["sunteck", "sunteck realty"] },
+  // ── Logistics ──
+  { symbol: "TCIEXPRESS", name: "TCI Express", exchange: "NSE", sector: "Logistics", base: 1384.6, aliases: ["tci express", "tci"] },
+  { symbol: "BLUEDART", name: "Blue Dart Express", exchange: "NSE", sector: "Logistics", base: 7284.6, aliases: ["blue dart", "bluedart", "ब्लू डार्ट"] },
+  { symbol: "AEGISLOG", name: "Aegis Logistics", exchange: "NSE", sector: "Logistics", base: 484.6, aliases: ["aegis logistics", "aegis"] },
+  // ── Media/Entertainment additions ──
+  { symbol: "NAZARA", name: "Nazara Technologies", exchange: "NSE", sector: "Gaming", base: 884.6, aliases: ["nazara", "nazara tech"] },
+  { symbol: "BRIGHTCOM", name: "Brightcom Group", exchange: "NSE", sector: "Media", base: 14.8, aliases: ["brightcom"] },
 ];
 
 /** Index snapshots shown in the ticker strip. */
